@@ -107,6 +107,8 @@ kotlin {
         }
     }
 
+    wasmJs()
+
     sourceSets {
         all {
             languageSettings.apply {
@@ -142,6 +144,12 @@ kotlin {
         }
 
         getByName("jsMain") {
+            dependencies {
+                api(npm("firebase", "10.6.0"))
+            }
+        }
+
+        getByName("wasmJsMain") {
             dependencies {
                 api(npm("firebase", "10.6.0"))
             }

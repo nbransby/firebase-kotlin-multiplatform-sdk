@@ -118,6 +118,8 @@ kotlin {
         }
     }
 
+    wasmJs()
+
     jvm {
         compilations.getByName("main") {
             kotlinOptions {

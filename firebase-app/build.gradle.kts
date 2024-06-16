@@ -92,6 +92,8 @@ kotlin {
         }
     }
 
+    wasmJs()
+
     js(IR) {
         useCommonJs()
         nodejs {
