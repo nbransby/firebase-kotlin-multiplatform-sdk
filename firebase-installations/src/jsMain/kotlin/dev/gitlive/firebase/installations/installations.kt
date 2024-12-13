@@ -10,8 +10,7 @@ import kotlinx.coroutines.await
 public actual val Firebase.installations: FirebaseInstallations
     get() = rethrow { FirebaseInstallations(getInstallations()) }
 
-public actual fun Firebase.installations(app: FirebaseApp): FirebaseInstallations =
-    rethrow { FirebaseInstallations(getInstallations(app.js)) }
+public actual fun Firebase.installations(app: FirebaseApp): FirebaseInstallations = rethrow { FirebaseInstallations(getInstallations(app.js)) }
 
 public val FirebaseInstallations.js get() = js
 
@@ -21,8 +20,7 @@ public actual class FirebaseInstallations internal constructor(internal val js: 
 
     public actual suspend fun getId(): String = rethrow { getId(js).await() }
 
-    public actual suspend fun getToken(forceRefresh: Boolean): String =
-        rethrow { getToken(js, forceRefresh).await() }
+    public actual suspend fun getToken(forceRefresh: Boolean): String = rethrow { getToken(js, forceRefresh).await() }
 }
 
 public actual open class FirebaseInstallationsException(code: String?, cause: Throwable) : FirebaseException(code, cause)

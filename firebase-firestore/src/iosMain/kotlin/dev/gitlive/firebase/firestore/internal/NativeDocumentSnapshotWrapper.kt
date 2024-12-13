@@ -13,18 +13,15 @@ internal actual class NativeDocumentSnapshotWrapper actual constructor(actual va
 
     actual val reference get() = NativeDocumentReference(native.reference)
 
-    actual fun getEncoded(field: String, serverTimestampBehavior: ServerTimestampBehavior): Any? =
-        native.valueForField(field, serverTimestampBehavior.toIos())?.takeIf { it !is NSNull }
+    actual fun getEncoded(field: String, serverTimestampBehavior: ServerTimestampBehavior): Any? = native.valueForField(field, serverTimestampBehavior.toIos())?.takeIf { it !is NSNull }
 
     // Despite its name implying otherwise, valueForField accepts both a String representation of a Field and a FIRFieldPath
-    actual fun getEncoded(fieldPath: EncodedFieldPath, serverTimestampBehavior: ServerTimestampBehavior): Any? =
-        native.valueForField(fieldPath, serverTimestampBehavior.toIos())?.takeIf { it !is NSNull }
+    actual fun getEncoded(fieldPath: EncodedFieldPath, serverTimestampBehavior: ServerTimestampBehavior): Any? = native.valueForField(fieldPath, serverTimestampBehavior.toIos())?.takeIf { it !is NSNull }
 
-    actual fun encodedData(serverTimestampBehavior: ServerTimestampBehavior): Any? =
-        native.dataWithServerTimestampBehavior(serverTimestampBehavior.toIos())
-            ?.mapValues { (_, value) ->
-                value?.takeIf { it !is NSNull }
-            }
+    actual fun encodedData(serverTimestampBehavior: ServerTimestampBehavior): Any? = native.dataWithServerTimestampBehavior(serverTimestampBehavior.toIos())
+        ?.mapValues { (_, value) ->
+            value?.takeIf { it !is NSNull }
+        }
 
     actual fun contains(field: String) = native.valueForField(field) != null
     actual fun contains(fieldPath: EncodedFieldPath) = native.valueForField(fieldPath) != null

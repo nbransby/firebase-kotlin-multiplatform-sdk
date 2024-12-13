@@ -94,24 +94,21 @@ internal actual class NativeFirebaseFirestoreWrapper internal constructor(
 
     actual fun batch() = rethrow { NativeWriteBatch(writeBatch(js)) }
 
-    actual fun setLoggingEnabled(loggingEnabled: Boolean) =
-        rethrow { setLogLevel(if (loggingEnabled) "error" else "silent") }
+    actual fun setLoggingEnabled(loggingEnabled: Boolean) = rethrow { setLogLevel(if (loggingEnabled) "error" else "silent") }
 
     actual fun applySettings(settings: FirebaseFirestoreSettings) {
         this.settings = settings
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    actual suspend fun <T> runTransaction(func: suspend NativeTransaction.() -> T) =
-        rethrow {
-            dev.gitlive.firebase.firestore.externals.runTransaction(
-                js,
-                { GlobalScope.promise { NativeTransaction(it).func() } },
-            ).await()
-        }
+    actual suspend fun <T> runTransaction(func: suspend NativeTransaction.() -> T) = rethrow {
+        dev.gitlive.firebase.firestore.externals.runTransaction(
+            js,
+            { GlobalScope.promise { NativeTransaction(it).func() } },
+        ).await()
+    }
 
-    actual suspend fun clearPersistence() =
-        rethrow { clearIndexedDbPersistence(js).await() }
+    actual suspend fun clearPersistence() = rethrow { clearIndexedDbPersistence(js).await() }
 
     actual fun useEmulator(host: String, port: Int) = rethrow {
         if (settings != null) {

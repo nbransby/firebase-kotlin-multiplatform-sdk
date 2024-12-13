@@ -40,21 +40,17 @@ public actual class FirebaseUser internal constructor(internal val ios: FIRUser)
 
     public actual suspend fun reload(): Unit = ios.await { reloadWithCompletion(it) }
 
-    public actual suspend fun getIdToken(forceRefresh: Boolean): String? =
-        ios.awaitResult { getIDTokenForcingRefresh(forceRefresh, it) }
+    public actual suspend fun getIdToken(forceRefresh: Boolean): String? = ios.awaitResult { getIDTokenForcingRefresh(forceRefresh, it) }
 
-    public actual suspend fun getIdTokenResult(forceRefresh: Boolean): AuthTokenResult =
-        AuthTokenResult(ios.awaitResult { getIDTokenResultForcingRefresh(forceRefresh, it) })
+    public actual suspend fun getIdTokenResult(forceRefresh: Boolean): AuthTokenResult = AuthTokenResult(ios.awaitResult { getIDTokenResultForcingRefresh(forceRefresh, it) })
 
-    public actual suspend fun linkWithCredential(credential: AuthCredential): AuthResult =
-        AuthResult(ios.awaitResult { linkWithCredential(credential.ios, it) })
+    public actual suspend fun linkWithCredential(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { linkWithCredential(credential.ios, it) })
 
     public actual suspend fun reauthenticate(credential: AuthCredential) {
         ios.awaitResult<FIRUser, FIRAuthDataResult?> { reauthenticateWithCredential(credential.ios, it) }
     }
 
-    public actual suspend fun reauthenticateAndRetrieveData(credential: AuthCredential): AuthResult =
-        AuthResult(ios.awaitResult { reauthenticateWithCredential(credential.ios, it) })
+    public actual suspend fun reauthenticateAndRetrieveData(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { reauthenticateWithCredential(credential.ios, it) })
 
     public actual suspend fun sendEmailVerification(actionCodeSettings: ActionCodeSettings?): Unit = ios.await {
         actionCodeSettings?.let { settings -> sendEmailVerificationWithActionCodeSettings(settings.toIos(), it) }

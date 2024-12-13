@@ -49,8 +49,7 @@ public val FirebaseDatabase.ios: FIRDatabase get() = FIRDatabase.database()
 public actual val Firebase.database: FirebaseDatabase
     by lazy { FirebaseDatabase(FIRDatabase.database()) }
 
-public actual fun Firebase.database(url: String): FirebaseDatabase =
-    FirebaseDatabase(FIRDatabase.databaseWithURL(url))
+public actual fun Firebase.database(url: String): FirebaseDatabase = FirebaseDatabase(FIRDatabase.databaseWithURL(url))
 
 public actual fun Firebase.database(app: FirebaseApp): FirebaseDatabase = FirebaseDatabase(
     FIRDatabase.databaseForApp(app.ios as objcnames.classes.FIRApp),
@@ -62,11 +61,9 @@ public actual fun Firebase.database(app: FirebaseApp, url: String): FirebaseData
 
 public actual class FirebaseDatabase internal constructor(internal val ios: FIRDatabase) {
 
-    public actual fun reference(path: String): DatabaseReference =
-        DatabaseReference(NativeDatabaseReference(ios.referenceWithPath(path), ios.persistenceEnabled))
+    public actual fun reference(path: String): DatabaseReference = DatabaseReference(NativeDatabaseReference(ios.referenceWithPath(path), ios.persistenceEnabled))
 
-    public actual fun reference(): DatabaseReference =
-        DatabaseReference(NativeDatabaseReference(ios.reference(), ios.persistenceEnabled))
+    public actual fun reference(): DatabaseReference = DatabaseReference(NativeDatabaseReference(ios.reference(), ios.persistenceEnabled))
 
     public actual fun setPersistenceEnabled(enabled: Boolean) {
         ios.persistenceEnabled = enabled
@@ -231,11 +228,9 @@ public actual class DataSnapshot internal constructor(
 
     public actual val value: Any? get() = ios.value
 
-    public actual inline fun <reified T> value(): T =
-        decode<T>(value = publicIos.value)
+    public actual inline fun <reified T> value(): T = decode<T>(value = publicIos.value)
 
-    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T =
-        decode(strategy, publicIos.value, buildSettings)
+    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(strategy, publicIos.value, buildSettings)
 
     public actual fun child(path: String): DataSnapshot = DataSnapshot(ios.childSnapshotForPath(path), persistenceEnabled)
     public actual val hasChildren: Boolean get() = ios.hasChildren()

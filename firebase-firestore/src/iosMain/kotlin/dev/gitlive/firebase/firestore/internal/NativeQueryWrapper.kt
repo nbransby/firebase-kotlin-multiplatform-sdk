@@ -19,8 +19,7 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
 
     actual fun limit(limit: Number) = native.queryLimitedTo(limit.toLong())
 
-    actual suspend fun get(source: Source) =
-        QuerySnapshot(awaitResult { native.getDocumentsWithSource(source.toIosSource(), it) })
+    actual suspend fun get(source: Source) = QuerySnapshot(awaitResult { native.getDocumentsWithSource(source.toIosSource(), it) })
 
     actual val snapshots get() = callbackFlow {
         val listener = native.addSnapshotListener { snapshot, error ->

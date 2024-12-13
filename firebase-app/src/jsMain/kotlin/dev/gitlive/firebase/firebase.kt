@@ -14,17 +14,13 @@ import dev.gitlive.firebase.externals.FirebaseApp as JsFirebaseApp
 public actual val Firebase.app: FirebaseApp
     get() = FirebaseApp(getApp())
 
-public actual fun Firebase.app(name: String): FirebaseApp =
-    FirebaseApp(getApp(name))
+public actual fun Firebase.app(name: String): FirebaseApp = FirebaseApp(getApp(name))
 
-public actual fun Firebase.initialize(context: Any?): FirebaseApp? =
-    throw UnsupportedOperationException("Cannot initialize firebase without options in JS")
+public actual fun Firebase.initialize(context: Any?): FirebaseApp? = throw UnsupportedOperationException("Cannot initialize firebase without options in JS")
 
-public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions, name: String): FirebaseApp =
-    FirebaseApp(initializeApp(options.toJson(), name))
+public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions, name: String): FirebaseApp = FirebaseApp(initializeApp(options.toJson(), name))
 
-public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions): FirebaseApp =
-    FirebaseApp(initializeApp(options.toJson()))
+public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions): FirebaseApp = FirebaseApp(initializeApp(options.toJson()))
 
 public val FirebaseApp.js: JsFirebaseApp get() = js
 

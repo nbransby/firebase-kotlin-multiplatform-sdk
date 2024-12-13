@@ -39,8 +39,7 @@ internal actual class NativeWriteBatchWrapper actual constructor(actual val nati
         documentRef.ios,
     ).let { this }
 
-    actual fun delete(documentRef: DocumentReference) =
-        native.deleteDocument(documentRef.ios).let { this }
+    actual fun delete(documentRef: DocumentReference) = native.deleteDocument(documentRef.ios).let { this }
 
     actual suspend fun commit() = await { native.commitWithCompletion(it) }
 }

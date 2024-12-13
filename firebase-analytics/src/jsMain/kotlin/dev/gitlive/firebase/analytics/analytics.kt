@@ -11,8 +11,7 @@ import kotlin.time.Duration
 public actual val Firebase.analytics: FirebaseAnalytics
     get() = FirebaseAnalytics(getAnalytics())
 
-public actual fun Firebase.analytics(app: FirebaseApp): FirebaseAnalytics =
-    FirebaseAnalytics(getAnalytics(app.js))
+public actual fun Firebase.analytics(app: FirebaseApp): FirebaseAnalytics = FirebaseAnalytics(getAnalytics(app.js))
 
 public val FirebaseAnalytics.js: dev.gitlive.firebase.analytics.externals.FirebaseAnalytics get() = js
 

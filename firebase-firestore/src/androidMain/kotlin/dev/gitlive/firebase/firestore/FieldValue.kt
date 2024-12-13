@@ -11,8 +11,7 @@ public actual class FieldValue internal actual constructor(internal actual val n
     init {
         require(nativeValue is NativeFieldValue)
     }
-    override fun equals(other: Any?): Boolean =
-        this === other || other is FieldValue && nativeValue == other.nativeValue
+    override fun equals(other: Any?): Boolean = this === other || other is FieldValue && nativeValue == other.nativeValue
     override fun hashCode(): Int = nativeValue.hashCode()
     override fun toString(): String = nativeValue.toString()
 

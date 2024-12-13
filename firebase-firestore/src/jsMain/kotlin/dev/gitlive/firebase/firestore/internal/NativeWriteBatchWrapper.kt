@@ -44,9 +44,8 @@ internal actual class NativeWriteBatchWrapper internal actual constructor(actual
         }
     }.let { this }
 
-    actual fun delete(documentRef: DocumentReference) =
-        rethrow { js.delete(documentRef.js) }
-            .let { this }
+    actual fun delete(documentRef: DocumentReference) = rethrow { js.delete(documentRef.js) }
+        .let { this }
 
     actual suspend fun commit() = rethrow { js.commit().await() }
 }

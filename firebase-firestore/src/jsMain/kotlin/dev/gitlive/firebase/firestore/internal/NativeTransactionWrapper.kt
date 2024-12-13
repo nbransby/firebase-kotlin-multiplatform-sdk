@@ -47,10 +47,8 @@ internal actual class NativeTransactionWrapper internal actual constructor(actua
         }
     }.let { this }
 
-    actual fun delete(documentRef: DocumentReference) =
-        rethrow { js.delete(documentRef.js) }
-            .let { this }
+    actual fun delete(documentRef: DocumentReference) = rethrow { js.delete(documentRef.js) }
+        .let { this }
 
-    actual suspend fun get(documentRef: DocumentReference) =
-        rethrow { NativeDocumentSnapshotWrapper(js.get(documentRef.js).await()) }
+    actual suspend fun get(documentRef: DocumentReference) = rethrow { NativeDocumentSnapshotWrapper(js.get(documentRef.js).await()) }
 }

@@ -18,8 +18,7 @@ public actual class FirebaseInstallations internal constructor(internal val andr
 
     public actual suspend fun getId(): String = android.id.await()
 
-    public actual suspend fun getToken(forceRefresh: Boolean): String =
-        android.getToken(forceRefresh).await().token
+    public actual suspend fun getToken(forceRefresh: Boolean): String = android.getToken(forceRefresh).await().token
 }
 
 public actual typealias FirebaseInstallationsException = com.google.firebase.installations.FirebaseInstallationsException

@@ -12,8 +12,7 @@ public val FirebaseCrashlytics.ios: FIRCrashlytics get() = FIRCrashlytics.crashl
 public actual val Firebase.crashlytics: FirebaseCrashlytics get() =
     FirebaseCrashlytics(FIRCrashlytics.crashlytics())
 
-public actual fun Firebase.crashlytics(app: FirebaseApp): FirebaseCrashlytics =
-    FirebaseCrashlytics(FIRCrashlytics.crashlytics())
+public actual fun Firebase.crashlytics(app: FirebaseApp): FirebaseCrashlytics = FirebaseCrashlytics(FIRCrashlytics.crashlytics())
 
 public actual class FirebaseCrashlytics internal constructor(internal val ios: FIRCrashlytics) {
 

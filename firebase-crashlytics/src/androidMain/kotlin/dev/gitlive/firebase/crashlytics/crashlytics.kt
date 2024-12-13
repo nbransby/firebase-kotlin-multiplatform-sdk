@@ -11,8 +11,7 @@ public val FirebaseCrashlytics.android: com.google.firebase.crashlytics.Firebase
 public actual val Firebase.crashlytics: FirebaseCrashlytics get() =
     FirebaseCrashlytics(com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance())
 
-public actual fun Firebase.crashlytics(app: FirebaseApp): FirebaseCrashlytics =
-    FirebaseCrashlytics(app.android.get(com.google.firebase.crashlytics.FirebaseCrashlytics::class.java))
+public actual fun Firebase.crashlytics(app: FirebaseApp): FirebaseCrashlytics = FirebaseCrashlytics(app.android.get(com.google.firebase.crashlytics.FirebaseCrashlytics::class.java))
 
 public actual class FirebaseCrashlytics internal constructor(internal val android: com.google.firebase.crashlytics.FirebaseCrashlytics) {
 

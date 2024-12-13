@@ -11,8 +11,7 @@ public val FirebasePerformance.ios: FIRPerformance get() = FIRPerformance.shared
 public actual val Firebase.performance: FirebasePerformance get() =
     FirebasePerformance(FIRPerformance.sharedInstance())
 
-public actual fun Firebase.performance(app: FirebaseApp): FirebasePerformance =
-    FirebasePerformance(FIRPerformance.sharedInstance())
+public actual fun Firebase.performance(app: FirebaseApp): FirebasePerformance = FirebasePerformance(FIRPerformance.sharedInstance())
 
 public actual class FirebasePerformance(internal val ios: FIRPerformance) {
 

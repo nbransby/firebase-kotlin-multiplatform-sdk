@@ -57,8 +57,7 @@ public actual class FirebaseRemoteConfig internal constructor(internal val ios: 
 
     public actual suspend fun activate(): Boolean = ios.awaitResult { activateWithCompletion(it) }
 
-    public actual suspend fun ensureInitialized(): Unit =
-        ios.await { ensureInitializedWithCompletionHandler(it) }
+    public actual suspend fun ensureInitialized(): Unit = ios.await { ensureInitializedWithCompletionHandler(it) }
 
     public actual suspend fun fetch(minimumFetchInterval: Duration?) {
         if (minimumFetchInterval != null) {
@@ -77,11 +76,9 @@ public actual class FirebaseRemoteConfig internal constructor(internal val ios: 
         return status == FIRRemoteConfigFetchAndActivateStatus.FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote
     }
 
-    public actual fun getKeysByPrefix(prefix: String): Set<String> =
-        all.keys.filter { it.startsWith(prefix) }.toSet()
+    public actual fun getKeysByPrefix(prefix: String): Set<String> = all.keys.filter { it.startsWith(prefix) }.toSet()
 
-    public actual fun getValue(key: String): FirebaseRemoteConfigValue =
-        FirebaseRemoteConfigValue(ios.configValueForKey(key))
+    public actual fun getValue(key: String): FirebaseRemoteConfigValue = FirebaseRemoteConfigValue(ios.configValueForKey(key))
 
     public actual suspend fun reset() {
         // not implemented for iOS target

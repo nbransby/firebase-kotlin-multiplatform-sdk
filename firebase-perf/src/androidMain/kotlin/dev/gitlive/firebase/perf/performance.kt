@@ -10,8 +10,7 @@ public val FirebasePerformance.android: com.google.firebase.perf.FirebasePerform
 public actual val Firebase.performance: FirebasePerformance get() =
     FirebasePerformance(com.google.firebase.perf.FirebasePerformance.getInstance())
 
-public actual fun Firebase.performance(app: FirebaseApp): FirebasePerformance =
-    FirebasePerformance(app.publicAndroid.get(com.google.firebase.perf.FirebasePerformance::class.java))
+public actual fun Firebase.performance(app: FirebaseApp): FirebasePerformance = FirebasePerformance(app.publicAndroid.get(com.google.firebase.perf.FirebasePerformance::class.java))
 
 public actual class FirebasePerformance(internal val android: com.google.firebase.perf.FirebasePerformance) {
 

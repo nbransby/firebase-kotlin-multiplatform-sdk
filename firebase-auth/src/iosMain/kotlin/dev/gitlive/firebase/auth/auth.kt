@@ -53,12 +53,10 @@ public actual class FirebaseAuth internal constructor(internal val ios: FIRAuth)
     public actual suspend fun applyActionCode(code: String): Unit = ios.await { applyActionCode(code, it) }
     public actual suspend fun confirmPasswordReset(code: String, newPassword: String): Unit = ios.await { confirmPasswordResetWithCode(code, newPassword, it) }
 
-    public actual suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult =
-        AuthResult(ios.awaitResult { createUserWithEmail(email = email, password = password, completion = it) })
+    public actual suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(ios.awaitResult { createUserWithEmail(email = email, password = password, completion = it) })
 
     @Suppress("UNCHECKED_CAST")
-    public actual suspend fun fetchSignInMethodsForEmail(email: String): List<String> =
-        ios.awaitResult<FIRAuth, List<*>?> { fetchSignInMethodsForEmail(email, it) }.orEmpty() as List<String>
+    public actual suspend fun fetchSignInMethodsForEmail(email: String): List<String> = ios.awaitResult<FIRAuth, List<*>?> { fetchSignInMethodsForEmail(email, it) }.orEmpty() as List<String>
 
     public actual suspend fun sendPasswordResetEmail(email: String, actionCodeSettings: ActionCodeSettings?) {
         ios.await { actionCodeSettings?.let { actionSettings -> sendPasswordResetWithEmail(email, actionSettings.toIos(), it) } ?: sendPasswordResetWithEmail(email = email, completion = it) }
@@ -68,20 +66,15 @@ public actual class FirebaseAuth internal constructor(internal val ios: FIRAuth)
 
     public actual fun isSignInWithEmailLink(link: String): Boolean = ios.isSignInWithEmailLink(link)
 
-    public actual suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult =
-        AuthResult(ios.awaitResult { signInWithEmail(email = email, password = password, completion = it) })
+    public actual suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(ios.awaitResult { signInWithEmail(email = email, password = password, completion = it) })
 
-    public actual suspend fun signInWithCustomToken(token: String): AuthResult =
-        AuthResult(ios.awaitResult { signInWithCustomToken(token, it) })
+    public actual suspend fun signInWithCustomToken(token: String): AuthResult = AuthResult(ios.awaitResult { signInWithCustomToken(token, it) })
 
-    public actual suspend fun signInAnonymously(): AuthResult =
-        AuthResult(ios.awaitResult { signInAnonymouslyWithCompletion(it) })
+    public actual suspend fun signInAnonymously(): AuthResult = AuthResult(ios.awaitResult { signInAnonymouslyWithCompletion(it) })
 
-    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult =
-        AuthResult(ios.awaitResult { signInWithCredential(authCredential.ios, it) })
+    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { signInWithCredential(authCredential.ios, it) })
 
-    public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult =
-        AuthResult(ios.awaitResult { signInWithEmail(email = email, link = link, completion = it) })
+    public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult = AuthResult(ios.awaitResult { signInWithEmail(email = email, link = link, completion = it) })
 
     public actual suspend fun signOut(): Unit = ios.throwError { signOut(it) }
 

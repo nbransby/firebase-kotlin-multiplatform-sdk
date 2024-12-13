@@ -33,27 +33,26 @@ private val backgroundContext = newSingleThreadContext("background")
  * @param create a block for object creation
  * @param test a block to perform test on a thread different from the one used in [create]
  */
-fun <T> runTestWithContextSwitch(create: suspend CoroutineScope.() -> T, test: suspend CoroutineScope.(T) -> Unit) =
-    runBlocking {
-        val testRun = MainScope().async {
-            val objMain = create()
-            withContext(backgroundContext) {
-                test(objMain)
-            }
-            val objBcg = withContext(backgroundContext) {
-                create()
-            }
-            test(objBcg)
+fun <T> runTestWithContextSwitch(create: suspend CoroutineScope.() -> T, test: suspend CoroutineScope.(T) -> Unit) = runBlocking {
+    val testRun = MainScope().async {
+        val objMain = create()
+        withContext(backgroundContext) {
+            test(objMain)
         }
-        while (testRun.isActive) {
-            NSRunLoop.mainRunLoop.runMode(
-                NSDefaultRunLoopMode,
-                beforeDate = NSDate.create(timeInterval = 1.0, sinceDate = NSDate()),
-            )
-            yield()
+        val objBcg = withContext(backgroundContext) {
+            create()
         }
-        testRun.await()
+        test(objBcg)
     }
+    while (testRun.isActive) {
+        NSRunLoop.mainRunLoop.runMode(
+            NSDefaultRunLoopMode,
+            beforeDate = NSDate.create(timeInterval = 1.0, sinceDate = NSDate()),
+        )
+        yield()
+    }
+    testRun.await()
+}
 
 class ContextSwitchTest {
 

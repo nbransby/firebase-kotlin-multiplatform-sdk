@@ -29,20 +29,16 @@ import dev.gitlive.firebase.functions.js as publicJs
 public actual val Firebase.functions: FirebaseFunctions
     get() = rethrow { FirebaseFunctions(getFunctions()) }
 
-public actual fun Firebase.functions(region: String): FirebaseFunctions =
-    rethrow { FirebaseFunctions(getFunctions(regionOrCustomDomain = region)) }
+public actual fun Firebase.functions(region: String): FirebaseFunctions = rethrow { FirebaseFunctions(getFunctions(regionOrCustomDomain = region)) }
 
-public actual fun Firebase.functions(app: FirebaseApp): FirebaseFunctions =
-    rethrow { FirebaseFunctions(getFunctions(app.js)) }
+public actual fun Firebase.functions(app: FirebaseApp): FirebaseFunctions = rethrow { FirebaseFunctions(getFunctions(app.js)) }
 
-public actual fun Firebase.functions(app: FirebaseApp, region: String): FirebaseFunctions =
-    rethrow { FirebaseFunctions(getFunctions(app.js, region)) }
+public actual fun Firebase.functions(app: FirebaseApp, region: String): FirebaseFunctions = rethrow { FirebaseFunctions(getFunctions(app.js, region)) }
 
 public val FirebaseFunctions.js get() = js
 
 public actual class FirebaseFunctions internal constructor(internal val js: Functions) {
-    public actual fun httpsCallable(name: String, timeout: Duration?): HttpsCallableReference =
-        rethrow { HttpsCallableReference(httpsCallable(js, name, timeout?.let { json("timeout" to timeout.toDouble(DurationUnit.MILLISECONDS)) }).native) }
+    public actual fun httpsCallable(name: String, timeout: Duration?): HttpsCallableReference = rethrow { HttpsCallableReference(httpsCallable(js, name, timeout?.let { json("timeout" to timeout.toDouble(DurationUnit.MILLISECONDS)) }).native) }
 
     public actual fun useEmulator(host: String, port: Int) {
         connectFunctionsEmulator(js, host, port)
@@ -66,11 +62,9 @@ public val HttpsCallableResult.js: JsHttpsCallableResult get() = js
 
 public actual class HttpsCallableResult(internal val js: JsHttpsCallableResult) {
 
-    public actual inline fun <reified T> data(): T =
-        rethrow { decode<T>(value = publicJs.data) }
+    public actual inline fun <reified T> data(): T = rethrow { decode<T>(value = publicJs.data) }
 
-    public actual inline fun <T> data(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T =
-        rethrow { decode(strategy, publicJs.data, buildSettings) }
+    public actual inline fun <T> data(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = rethrow { decode(strategy, publicJs.data, buildSettings) }
 }
 
 public actual class FirebaseFunctionsException(cause: Throwable, public val code: FunctionsExceptionCode, public val details: Any?) : FirebaseException(cause.message, cause)

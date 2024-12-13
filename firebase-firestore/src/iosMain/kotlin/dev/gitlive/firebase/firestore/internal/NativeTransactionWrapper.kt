@@ -38,9 +38,7 @@ internal actual class NativeTransactionWrapper actual constructor(actual val nat
         documentRef.ios,
     ).let { this }
 
-    actual fun delete(documentRef: DocumentReference) =
-        native.deleteDocument(documentRef.ios).let { this }
+    actual fun delete(documentRef: DocumentReference) = native.deleteDocument(documentRef.ios).let { this }
 
-    actual suspend fun get(documentRef: DocumentReference) =
-        throwError { NativeDocumentSnapshotWrapper(native.getDocument(documentRef.ios, it)!!) }
+    actual suspend fun get(documentRef: DocumentReference) = throwError { NativeDocumentSnapshotWrapper(native.getDocument(documentRef.ios, it)!!) }
 }

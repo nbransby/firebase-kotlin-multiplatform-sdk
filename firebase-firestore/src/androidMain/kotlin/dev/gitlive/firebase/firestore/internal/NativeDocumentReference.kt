@@ -28,8 +28,7 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
 
     actual fun collection(collectionPath: String) = android.collection(collectionPath)
 
-    actual suspend fun get(source: Source) =
-        android.get(source.toAndroidSource()).await()
+    actual suspend fun get(source: Source) = android.get(source.toAndroidSource()).await()
 
     actual suspend fun setEncoded(encodedData: EncodedObject, setOptions: SetOptions) {
         val task = (
@@ -68,8 +67,7 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
         exception?.let { close(exception) }
     }
 
-    override fun equals(other: Any?): Boolean =
-        this === other || other is NativeDocumentReference && nativeValue == other.nativeValue
+    override fun equals(other: Any?): Boolean = this === other || other is NativeDocumentReference && nativeValue == other.nativeValue
     override fun hashCode(): Int = nativeValue.hashCode()
     override fun toString(): String = nativeValue.toString()
 

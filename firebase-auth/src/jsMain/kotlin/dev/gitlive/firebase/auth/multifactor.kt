@@ -13,14 +13,10 @@ public val MultiFactor.js get() = js
 public actual class MultiFactor(internal val js: MultiFactorUser) {
     public actual val enrolledFactors: List<MultiFactorInfo>
         get() = rethrow { js.enrolledFactors.map { MultiFactorInfo(it) } }
-    public actual suspend fun enroll(multiFactorAssertion: MultiFactorAssertion, displayName: String?): Unit =
-        rethrow { js.enroll(multiFactorAssertion.js, displayName).await() }
-    public actual suspend fun getSession(): MultiFactorSession =
-        rethrow { MultiFactorSession(js.getSession().await()) }
-    public actual suspend fun unenroll(multiFactorInfo: MultiFactorInfo): Unit =
-        rethrow { js.unenroll(multiFactorInfo.js).await() }
-    public actual suspend fun unenroll(factorUid: String): Unit =
-        rethrow { js.unenroll(factorUid).await() }
+    public actual suspend fun enroll(multiFactorAssertion: MultiFactorAssertion, displayName: String?): Unit = rethrow { js.enroll(multiFactorAssertion.js, displayName).await() }
+    public actual suspend fun getSession(): MultiFactorSession = rethrow { MultiFactorSession(js.getSession().await()) }
+    public actual suspend fun unenroll(multiFactorInfo: MultiFactorInfo): Unit = rethrow { js.unenroll(multiFactorInfo.js).await() }
+    public actual suspend fun unenroll(factorUid: String): Unit = rethrow { js.unenroll(factorUid).await() }
 }
 
 public val MultiFactorInfo.js get() = js

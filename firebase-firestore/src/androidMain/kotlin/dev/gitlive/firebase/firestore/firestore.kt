@@ -36,8 +36,7 @@ public val FirebaseFirestore.android: AndroidFirebaseFirestore get() = AndroidFi
 public actual val Firebase.firestore: FirebaseFirestore get() =
     FirebaseFirestore(AndroidFirebaseFirestore.getInstance())
 
-public actual fun Firebase.firestore(app: FirebaseApp): FirebaseFirestore =
-    FirebaseFirestore(AndroidFirebaseFirestore.getInstance(app.android))
+public actual fun Firebase.firestore(app: FirebaseApp): FirebaseFirestore = FirebaseFirestore(AndroidFirebaseFirestore.getInstance(app.android))
 
 public val LocalCacheSettings.android: AndroidLocalCacheSettings get() = when (this) {
     is LocalCacheSettings.Persistent -> androidPersistentCacheSettings {

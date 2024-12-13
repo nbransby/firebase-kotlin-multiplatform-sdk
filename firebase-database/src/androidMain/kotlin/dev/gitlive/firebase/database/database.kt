@@ -44,29 +44,25 @@ import kotlin.time.Duration.Companion.seconds
 
 public val FirebaseDatabase.android: com.google.firebase.database.FirebaseDatabase get() = com.google.firebase.database.FirebaseDatabase.getInstance()
 
-internal suspend fun <T> Task<T>.awaitWhileOnline(database: FirebaseDatabase): T =
-    merge(
-        flow { emit(await()) },
-        database
-            .reference(".info/connected")
-            .valueEvents
-            .debounce(2.seconds)
-            .filterNot { it.value<Boolean>() }
-            .map<DataSnapshot, T> { throw DatabaseException("Database not connected", null) },
-    )
-        .first()
+internal suspend fun <T> Task<T>.awaitWhileOnline(database: FirebaseDatabase): T = merge(
+    flow { emit(await()) },
+    database
+        .reference(".info/connected")
+        .valueEvents
+        .debounce(2.seconds)
+        .filterNot { it.value<Boolean>() }
+        .map<DataSnapshot, T> { throw DatabaseException("Database not connected", null) },
+)
+    .first()
 
 public actual val Firebase.database: FirebaseDatabase
     by lazy { FirebaseDatabase.getInstance(com.google.firebase.database.FirebaseDatabase.getInstance()) }
 
-public actual fun Firebase.database(url: String): FirebaseDatabase =
-    FirebaseDatabase.getInstance(com.google.firebase.database.FirebaseDatabase.getInstance(url))
+public actual fun Firebase.database(url: String): FirebaseDatabase = FirebaseDatabase.getInstance(com.google.firebase.database.FirebaseDatabase.getInstance(url))
 
-public actual fun Firebase.database(app: FirebaseApp): FirebaseDatabase =
-    FirebaseDatabase.getInstance(com.google.firebase.database.FirebaseDatabase.getInstance(app.android))
+public actual fun Firebase.database(app: FirebaseApp): FirebaseDatabase = FirebaseDatabase.getInstance(com.google.firebase.database.FirebaseDatabase.getInstance(app.android))
 
-public actual fun Firebase.database(app: FirebaseApp, url: String): FirebaseDatabase =
-    FirebaseDatabase.getInstance(com.google.firebase.database.FirebaseDatabase.getInstance(app.android, url))
+public actual fun Firebase.database(app: FirebaseApp, url: String): FirebaseDatabase = FirebaseDatabase.getInstance(com.google.firebase.database.FirebaseDatabase.getInstance(app.android, url))
 
 public actual class FirebaseDatabase internal constructor(internal val android: com.google.firebase.database.FirebaseDatabase) {
 
@@ -80,11 +76,9 @@ public actual class FirebaseDatabase internal constructor(internal val android: 
 
     private var persistenceEnabled = true
 
-    public actual fun reference(path: String): DatabaseReference =
-        DatabaseReference(NativeDatabaseReference(android.getReference(path), persistenceEnabled))
+    public actual fun reference(path: String): DatabaseReference = DatabaseReference(NativeDatabaseReference(android.getReference(path), persistenceEnabled))
 
-    public actual fun reference(): DatabaseReference =
-        DatabaseReference(NativeDatabaseReference(android.reference, persistenceEnabled))
+    public actual fun reference(): DatabaseReference = DatabaseReference(NativeDatabaseReference(android.reference, persistenceEnabled))
 
     public actual fun setPersistenceEnabled(enabled: Boolean) {
         android.setPersistenceEnabled(enabled)
@@ -287,11 +281,9 @@ public actual class DataSnapshot internal constructor(
 
     public actual val value: Any? get() = android.value
 
-    public actual inline fun <reified T> value(): T =
-        decode<T>(value = publicAndroid.value)
+    public actual inline fun <reified T> value(): T = decode<T>(value = publicAndroid.value)
 
-    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T =
-        decode(strategy, publicAndroid.value, buildSettings)
+    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(strategy, publicAndroid.value, buildSettings)
 
     public actual fun child(path: String): DataSnapshot = DataSnapshot(android.child(path), persistenceEnabled)
     public actual val hasChildren: Boolean get() = android.hasChildren()

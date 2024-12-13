@@ -36,8 +36,7 @@ public actual class FirebaseRemoteConfig internal constructor(internal val js: R
     public actual suspend fun activate(): Boolean = rethrow { activate(js).await() }
     public actual suspend fun ensureInitialized(): Unit = rethrow { ensureInitialized(js).await() }
 
-    public actual suspend fun fetch(minimumFetchInterval: Duration?): Unit =
-        rethrow { fetchConfig(js).await() }
+    public actual suspend fun fetch(minimumFetchInterval: Duration?): Unit = rethrow { fetchConfig(js).await() }
 
     public actual suspend fun fetchAndActivate(): Boolean = rethrow { fetchAndActivate(js).await() }
 

@@ -95,13 +95,12 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
 
     actual suspend fun delete() = rethrow { deleteDoc(js).await() }
 
-    override fun equals(other: Any?): Boolean =
-        this === other ||
-            other is NativeDocumentReference &&
-            refEqual(
-                nativeValue,
-                other.nativeValue,
-            )
+    override fun equals(other: Any?): Boolean = this === other ||
+        other is NativeDocumentReference &&
+        refEqual(
+            nativeValue,
+            other.nativeValue,
+        )
     override fun hashCode(): Int = nativeValue.hashCode()
     override fun toString(): String = "DocumentReference(path=$path)"
 }

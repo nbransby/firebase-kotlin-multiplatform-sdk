@@ -19,17 +19,13 @@ public val FirebaseApp.android: com.google.firebase.FirebaseApp get() = android
 public actual val Firebase.app: FirebaseApp
     get() = FirebaseApp(com.google.firebase.FirebaseApp.getInstance())
 
-public actual fun Firebase.app(name: String): FirebaseApp =
-    FirebaseApp(com.google.firebase.FirebaseApp.getInstance(name))
+public actual fun Firebase.app(name: String): FirebaseApp = FirebaseApp(com.google.firebase.FirebaseApp.getInstance(name))
 
-public actual fun Firebase.initialize(context: Any?): FirebaseApp? =
-    com.google.firebase.FirebaseApp.initializeApp(context as Context)?.let { FirebaseApp(it) }
+public actual fun Firebase.initialize(context: Any?): FirebaseApp? = com.google.firebase.FirebaseApp.initializeApp(context as Context)?.let { FirebaseApp(it) }
 
-public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions, name: String): FirebaseApp =
-    FirebaseApp(com.google.firebase.FirebaseApp.initializeApp(context as Context, options.toAndroid(), name))
+public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions, name: String): FirebaseApp = FirebaseApp(com.google.firebase.FirebaseApp.initializeApp(context as Context, options.toAndroid(), name))
 
-public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions): FirebaseApp =
-    FirebaseApp(com.google.firebase.FirebaseApp.initializeApp(context as Context, options.toAndroid()))
+public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions): FirebaseApp = FirebaseApp(com.google.firebase.FirebaseApp.initializeApp(context as Context, options.toAndroid()))
 
 public actual data class FirebaseApp internal constructor(internal val android: com.google.firebase.FirebaseApp) {
     actual val name: String

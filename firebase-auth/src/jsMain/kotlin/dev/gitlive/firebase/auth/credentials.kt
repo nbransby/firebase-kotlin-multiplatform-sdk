@@ -23,8 +23,7 @@ public actual class PhoneAuthCredential(js: JsAuthCredential) : AuthCredential(j
 public actual class OAuthCredential(js: JsAuthCredential) : AuthCredential(js)
 
 public actual object EmailAuthProvider {
-    public actual fun credential(email: String, password: String): AuthCredential =
-        AuthCredential(EmailAuthProvider.credential(email, password))
+    public actual fun credential(email: String, password: String): AuthCredential = AuthCredential(EmailAuthProvider.credential(email, password))
 
     public actual fun credentialWithLink(
         email: String,
@@ -33,13 +32,11 @@ public actual object EmailAuthProvider {
 }
 
 public actual object FacebookAuthProvider {
-    public actual fun credential(accessToken: String): AuthCredential =
-        AuthCredential(FacebookAuthProvider.credential(accessToken))
+    public actual fun credential(accessToken: String): AuthCredential = AuthCredential(FacebookAuthProvider.credential(accessToken))
 }
 
 public actual object GithubAuthProvider {
-    public actual fun credential(token: String): AuthCredential =
-        AuthCredential(GithubAuthProvider.credential(token))
+    public actual fun credential(token: String): AuthCredential = AuthCredential(GithubAuthProvider.credential(token))
 }
 
 public actual object GoogleAuthProvider {

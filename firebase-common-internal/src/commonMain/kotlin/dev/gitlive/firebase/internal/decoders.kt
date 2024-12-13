@@ -16,8 +16,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 
 public inline fun <reified T> decode(value: Any?): T = decode(value) {}
-public inline fun <reified T> decode(value: Any?, buildSettings: DecodeSettings.Builder.() -> Unit): T =
-    decode(value, DecodeSettingsImpl.Builder().apply(buildSettings).buildDecodeSettings())
+public inline fun <reified T> decode(value: Any?, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(value, DecodeSettingsImpl.Builder().apply(buildSettings).buildDecodeSettings())
 
 @PublishedApi
 internal inline fun <reified T> decode(value: Any?, decodeSettings: DecodeSettings): T {
@@ -25,8 +24,7 @@ internal inline fun <reified T> decode(value: Any?, decodeSettings: DecodeSettin
     return decode(strategy as DeserializationStrategy<T>, value, decodeSettings)
 }
 public fun <T> decode(strategy: DeserializationStrategy<T>, value: Any?): T = decode(strategy, value) {}
-public inline fun <T> decode(strategy: DeserializationStrategy<T>, value: Any?, buildSettings: DecodeSettings.Builder.() -> Unit): T =
-    decode(strategy, value, DecodeSettingsImpl.Builder().apply(buildSettings).buildDecodeSettings())
+public inline fun <T> decode(strategy: DeserializationStrategy<T>, value: Any?, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(strategy, value, DecodeSettingsImpl.Builder().apply(buildSettings).buildDecodeSettings())
 
 @PublishedApi
 internal fun <T> decode(strategy: DeserializationStrategy<T>, value: Any?, decodeSettings: DecodeSettings): T {
@@ -114,26 +112,19 @@ public open class FirebaseCompositeDecoder(
         deserializer.deserialize(FirebaseDecoder(it, settings))
     }
 
-    override fun decodeBooleanElement(descriptor: SerialDescriptor, index: Int): Boolean =
-        decodeElement(descriptor, index, ::decodeBoolean)
+    override fun decodeBooleanElement(descriptor: SerialDescriptor, index: Int): Boolean = decodeElement(descriptor, index, ::decodeBoolean)
 
-    override fun decodeByteElement(descriptor: SerialDescriptor, index: Int): Byte =
-        decodeElement(descriptor, index, ::decodeByte)
+    override fun decodeByteElement(descriptor: SerialDescriptor, index: Int): Byte = decodeElement(descriptor, index, ::decodeByte)
 
-    override fun decodeCharElement(descriptor: SerialDescriptor, index: Int): Char =
-        decodeElement(descriptor, index, ::decodeChar)
+    override fun decodeCharElement(descriptor: SerialDescriptor, index: Int): Char = decodeElement(descriptor, index, ::decodeChar)
 
-    override fun decodeDoubleElement(descriptor: SerialDescriptor, index: Int): Double =
-        decodeElement(descriptor, index, ::decodeDouble)
+    override fun decodeDoubleElement(descriptor: SerialDescriptor, index: Int): Double = decodeElement(descriptor, index, ::decodeDouble)
 
-    override fun decodeFloatElement(descriptor: SerialDescriptor, index: Int): Float =
-        decodeElement(descriptor, index, ::decodeFloat)
+    override fun decodeFloatElement(descriptor: SerialDescriptor, index: Int): Float = decodeElement(descriptor, index, ::decodeFloat)
 
-    override fun decodeIntElement(descriptor: SerialDescriptor, index: Int): Int =
-        decodeElement(descriptor, index, ::decodeInt)
+    override fun decodeIntElement(descriptor: SerialDescriptor, index: Int): Int = decodeElement(descriptor, index, ::decodeInt)
 
-    override fun decodeLongElement(descriptor: SerialDescriptor, index: Int): Long =
-        decodeElement(descriptor, index, ::decodeLong)
+    override fun decodeLongElement(descriptor: SerialDescriptor, index: Int): Long = decodeElement(descriptor, index, ::decodeLong)
 
     override fun <T : Any> decodeNullableSerializableElement(
         descriptor: SerialDescriptor,
@@ -149,19 +140,16 @@ public open class FirebaseCompositeDecoder(
         }
     }
 
-    override fun decodeShortElement(descriptor: SerialDescriptor, index: Int): Short =
-        decodeElement(descriptor, index, ::decodeShort)
+    override fun decodeShortElement(descriptor: SerialDescriptor, index: Int): Short = decodeElement(descriptor, index, ::decodeShort)
 
-    override fun decodeStringElement(descriptor: SerialDescriptor, index: Int): String =
-        decodeElement(descriptor, index, ::decodeString)
+    override fun decodeStringElement(descriptor: SerialDescriptor, index: Int): String = decodeElement(descriptor, index, ::decodeString)
 
     override fun endStructure(descriptor: SerialDescriptor) {}
 
     @ExperimentalSerializationApi
-    override fun decodeInlineElement(descriptor: SerialDescriptor, index: Int): Decoder =
-        decodeElement(descriptor, index) {
-            FirebaseDecoder(it, settings)
-        }
+    override fun decodeInlineElement(descriptor: SerialDescriptor, index: Int): Decoder = decodeElement(descriptor, index) {
+        FirebaseDecoder(it, settings)
+    }
 
     private fun <T> decodeElement(descriptor: SerialDescriptor, index: Int, decoder: (Any?) -> T): T = try {
         decoder(get(descriptor, index))

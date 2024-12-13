@@ -19,8 +19,7 @@ public actual fun FirebaseDecoder.structureDecoder(descriptor: SerialDescriptor,
     else -> TODO("The firebase-kotlin-sdk does not support $descriptor for serialization yet")
 }
 
-public actual fun getPolymorphicType(value: Any?, discriminator: String): String =
-    (value as? Map<*, *>).orEmpty()[discriminator] as String
+public actual fun getPolymorphicType(value: Any?, discriminator: String): String = (value as? Map<*, *>).orEmpty()[discriminator] as String
 
 private fun FirebaseDecoder.decodeAsList(): CompositeDecoder = (value as? List<*>).orEmpty().let {
     FirebaseCompositeDecoder(it.size, settings) { _, index -> it[index] }

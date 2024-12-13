@@ -17,17 +17,13 @@ public val FirebaseApp.ios: FIRApp get() = ios
 public actual val Firebase.app: FirebaseApp
     get() = FirebaseApp(FIRApp.defaultApp()!!)
 
-public actual fun Firebase.app(name: String): FirebaseApp =
-    FirebaseApp(FIRApp.appNamed(name)!!)
+public actual fun Firebase.app(name: String): FirebaseApp = FirebaseApp(FIRApp.appNamed(name)!!)
 
-public actual fun Firebase.initialize(context: Any?): FirebaseApp? =
-    FIRApp.configure().let { app }
+public actual fun Firebase.initialize(context: Any?): FirebaseApp? = FIRApp.configure().let { app }
 
-public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions, name: String): FirebaseApp =
-    FIRApp.configureWithName(name, options.toIos()).let { app(name) }
+public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions, name: String): FirebaseApp = FIRApp.configureWithName(name, options.toIos()).let { app(name) }
 
-public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions): FirebaseApp =
-    FIRApp.configureWithOptions(options.toIos()).let { app }
+public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions): FirebaseApp = FIRApp.configureWithOptions(options.toIos()).let { app }
 
 public actual data class FirebaseApp internal constructor(internal val ios: FIRApp) {
     actual val name: String

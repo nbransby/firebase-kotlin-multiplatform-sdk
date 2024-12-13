@@ -34,6 +34,5 @@ internal actual class NativeDocumentSnapshotWrapper internal actual constructor(
     actual val exists get() = rethrow { js.exists() }
     actual val metadata: SnapshotMetadata get() = SnapshotMetadata(js.metadata)
 
-    fun getTimestampsOptions(serverTimestampBehavior: ServerTimestampBehavior) =
-        json("serverTimestamps" to serverTimestampBehavior.name.lowercase())
+    fun getTimestampsOptions(serverTimestampBehavior: ServerTimestampBehavior) = json("serverTimestamps" to serverTimestampBehavior.name.lowercase())
 }

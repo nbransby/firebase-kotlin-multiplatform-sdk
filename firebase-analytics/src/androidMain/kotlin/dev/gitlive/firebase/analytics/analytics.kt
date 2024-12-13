@@ -13,8 +13,7 @@ import kotlin.time.Duration
 public actual val Firebase.analytics: FirebaseAnalytics
     get() = FirebaseAnalytics(com.google.firebase.Firebase.analytics)
 
-public actual fun Firebase.analytics(app: FirebaseApp): FirebaseAnalytics =
-    FirebaseAnalytics(com.google.firebase.Firebase.analytics)
+public actual fun Firebase.analytics(app: FirebaseApp): FirebaseAnalytics = FirebaseAnalytics(com.google.firebase.Firebase.analytics)
 
 public val FirebaseAnalytics.android: com.google.firebase.analytics.FirebaseAnalytics get() = android
 

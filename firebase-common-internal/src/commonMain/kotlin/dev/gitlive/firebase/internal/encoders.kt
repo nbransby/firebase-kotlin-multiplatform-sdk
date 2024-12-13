@@ -17,20 +17,17 @@ public fun <T> encode(strategy: SerializationStrategy<T>, value: T, shouldEncode
     this.encodeDefaults = shouldEncodeElementDefault
 }
 
-public inline fun <T> encode(strategy: SerializationStrategy<T>, value: T, buildSettings: EncodeSettings.Builder.() -> Unit): Any? =
-    encode(strategy, value, EncodeSettingsImpl.Builder().apply(buildSettings).buildEncodeSettings())
+public inline fun <T> encode(strategy: SerializationStrategy<T>, value: T, buildSettings: EncodeSettings.Builder.() -> Unit): Any? = encode(strategy, value, EncodeSettingsImpl.Builder().apply(buildSettings).buildEncodeSettings())
 
 @PublishedApi
-internal fun <T> encode(strategy: SerializationStrategy<T>, value: T, encodeSettings: EncodeSettings): Any? =
-    FirebaseEncoder(encodeSettings).apply { encodeSerializableValue(strategy, value) }.value
+internal fun <T> encode(strategy: SerializationStrategy<T>, value: T, encodeSettings: EncodeSettings): Any? = FirebaseEncoder(encodeSettings).apply { encodeSerializableValue(strategy, value) }.value
 
 @Deprecated("Deprecated. Use builder instead", replaceWith = ReplaceWith("encode(value) { this.encodeDefaults = shouldEncodeElementDefault }"))
 public inline fun <reified T> encode(value: T, shouldEncodeElementDefault: Boolean): Any? = encode(value) {
     this.encodeDefaults = shouldEncodeElementDefault
 }
 
-public inline fun <reified T> encode(value: T, buildSettings: EncodeSettings.Builder.() -> Unit = {}): Any? =
-    encode(value, EncodeSettingsImpl.Builder().apply(buildSettings).buildEncodeSettings())
+public inline fun <reified T> encode(value: T, buildSettings: EncodeSettings.Builder.() -> Unit = {}): Any? = encode(value, EncodeSettingsImpl.Builder().apply(buildSettings).buildEncodeSettings())
 
 /**
  * Encodes data as an [EncodedObject].
@@ -230,8 +227,7 @@ public open class FirebaseCompositeEncoder(
     override fun encodeStringElement(descriptor: SerialDescriptor, index: Int, value: String): Unit = set(descriptor, index, value)
 
     @ExperimentalSerializationApi
-    override fun encodeInlineElement(descriptor: SerialDescriptor, index: Int): Encoder =
-        FirebaseEncoder(settings)
+    override fun encodeInlineElement(descriptor: SerialDescriptor, index: Int): Encoder = FirebaseEncoder(settings)
 
     public fun encodePolymorphicClassDiscriminator(discriminator: String, type: String) {
         setPolymorphicType(discriminator, type)

@@ -38,8 +38,7 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
         awaitClose { listener.remove() }
     }
 
-    actual suspend fun get(source: Source): QuerySnapshot =
-        QuerySnapshot(native.get(source.toAndroidSource()).await())
+    actual suspend fun get(source: Source): QuerySnapshot = QuerySnapshot(native.get(source.toAndroidSource()).await())
 
     actual fun where(filter: Filter) = native.where(filter.toAndroidFilter())
 

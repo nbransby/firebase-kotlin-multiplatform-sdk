@@ -35,8 +35,7 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
 
     actual fun collection(collectionPath: String) = ios.collectionWithPath(collectionPath)
 
-    actual suspend fun get(source: Source) =
-        awaitResult { ios.getDocumentWithSource(source.toIosSource(), it) }
+    actual suspend fun get(source: Source) = awaitResult { ios.getDocumentWithSource(source.toIosSource(), it) }
 
     actual suspend fun setEncoded(encodedData: EncodedObject, setOptions: SetOptions) = await {
         when (setOptions) {
@@ -55,15 +54,13 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
         ios.updateData(encodedData.ios, it)
     }
 
-    actual suspend fun updateEncodedFieldsAndValues(encodedFieldsAndValues: List<Pair<String, Any?>>) =
-        await {
-            ios.updateData(encodedFieldsAndValues.toMap(), it)
-        }
+    actual suspend fun updateEncodedFieldsAndValues(encodedFieldsAndValues: List<Pair<String, Any?>>) = await {
+        ios.updateData(encodedFieldsAndValues.toMap(), it)
+    }
 
-    actual suspend fun updateEncodedFieldPathsAndValues(encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>) =
-        await {
-            ios.updateData(encodedFieldsAndValues.toMap(), it)
-        }
+    actual suspend fun updateEncodedFieldPathsAndValues(encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>) = await {
+        ios.updateData(encodedFieldsAndValues.toMap(), it)
+    }
 
     actual suspend fun delete() = await { ios.deleteDocumentWithCompletion(it) }
 
@@ -75,8 +72,7 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
         awaitClose { listener.remove() }
     }
 
-    override fun equals(other: Any?): Boolean =
-        this === other || other is NativeDocumentReference && nativeValue == other.nativeValue
+    override fun equals(other: Any?): Boolean = this === other || other is NativeDocumentReference && nativeValue == other.nativeValue
     override fun hashCode(): Int = nativeValue.hashCode()
     override fun toString(): String = nativeValue.toString()
 }

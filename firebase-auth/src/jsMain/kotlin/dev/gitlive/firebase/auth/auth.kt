@@ -41,8 +41,7 @@ import dev.gitlive.firebase.auth.externals.AdditionalUserInfo as JsAdditionalUse
 public actual val Firebase.auth: FirebaseAuth
     get() = rethrow { FirebaseAuth(getAuth()) }
 
-public actual fun Firebase.auth(app: FirebaseApp): FirebaseAuth =
-    rethrow { FirebaseAuth(getAuth(app.js)) }
+public actual fun Firebase.auth(app: FirebaseApp): FirebaseAuth = rethrow { FirebaseAuth(getAuth(app.js)) }
 
 public val FirebaseAuth.js: Auth get() = js
 
@@ -74,41 +73,31 @@ public actual class FirebaseAuth internal constructor(internal val js: Auth) {
     public actual suspend fun applyActionCode(code: String): Unit = rethrow { applyActionCode(js, code).await() }
     public actual suspend fun confirmPasswordReset(code: String, newPassword: String): Unit = rethrow { confirmPasswordReset(js, code, newPassword).await() }
 
-    public actual suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult =
-        rethrow { AuthResult(createUserWithEmailAndPassword(js, email, password).await()) }
+    public actual suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult = rethrow { AuthResult(createUserWithEmailAndPassword(js, email, password).await()) }
 
     public actual suspend fun fetchSignInMethodsForEmail(email: String): List<String> = rethrow { fetchSignInMethodsForEmail(js, email).await().asList() }
 
-    public actual suspend fun sendPasswordResetEmail(email: String, actionCodeSettings: ActionCodeSettings?): Unit =
-        rethrow { sendPasswordResetEmail(js, email, actionCodeSettings?.toJson()).await() }
+    public actual suspend fun sendPasswordResetEmail(email: String, actionCodeSettings: ActionCodeSettings?): Unit = rethrow { sendPasswordResetEmail(js, email, actionCodeSettings?.toJson()).await() }
 
-    public actual suspend fun sendSignInLinkToEmail(email: String, actionCodeSettings: ActionCodeSettings): Unit =
-        rethrow { sendSignInLinkToEmail(js, email, actionCodeSettings.toJson()).await() }
+    public actual suspend fun sendSignInLinkToEmail(email: String, actionCodeSettings: ActionCodeSettings): Unit = rethrow { sendSignInLinkToEmail(js, email, actionCodeSettings.toJson()).await() }
 
     public actual fun isSignInWithEmailLink(link: String): Boolean = rethrow { isSignInWithEmailLink(js, link) }
 
-    public actual suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult =
-        rethrow { AuthResult(signInWithEmailAndPassword(js, email, password).await()) }
+    public actual suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult = rethrow { AuthResult(signInWithEmailAndPassword(js, email, password).await()) }
 
-    public actual suspend fun signInWithCustomToken(token: String): AuthResult =
-        rethrow { AuthResult(signInWithCustomToken(js, token).await()) }
+    public actual suspend fun signInWithCustomToken(token: String): AuthResult = rethrow { AuthResult(signInWithCustomToken(js, token).await()) }
 
-    public actual suspend fun signInAnonymously(): AuthResult =
-        rethrow { AuthResult(signInAnonymously(js).await()) }
+    public actual suspend fun signInAnonymously(): AuthResult = rethrow { AuthResult(signInAnonymously(js).await()) }
 
-    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult =
-        rethrow { AuthResult(signInWithCredential(js, authCredential.js).await()) }
+    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult = rethrow { AuthResult(signInWithCredential(js, authCredential.js).await()) }
 
-    public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult =
-        rethrow { AuthResult(signInWithEmailLink(js, email, link).await()) }
+    public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult = rethrow { AuthResult(signInWithEmailLink(js, email, link).await()) }
 
     public actual suspend fun signOut(): Unit = rethrow { signOut(js).await() }
 
-    public actual suspend fun updateCurrentUser(user: FirebaseUser): Unit =
-        rethrow { updateCurrentUser(js, user.js).await() }
+    public actual suspend fun updateCurrentUser(user: FirebaseUser): Unit = rethrow { updateCurrentUser(js, user.js).await() }
 
-    public actual suspend fun verifyPasswordResetCode(code: String): String =
-        rethrow { verifyPasswordResetCode(js, code).await() }
+    public actual suspend fun verifyPasswordResetCode(code: String): String = rethrow { verifyPasswordResetCode(js, code).await() }
 
     public actual suspend fun <T : ActionCodeResult> checkActionCode(code: String): T = rethrow {
         val result = checkActionCode(js, code).await()

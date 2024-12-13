@@ -35,8 +35,7 @@ import dev.gitlive.firebase.firestore.externals.documentId as jsDocumentId
 public actual val Firebase.firestore: FirebaseFirestore get() =
     rethrow { FirebaseFirestore(NativeFirebaseFirestoreWrapper(getApp())) }
 
-public actual fun Firebase.firestore(app: FirebaseApp): FirebaseFirestore =
-    rethrow { FirebaseFirestore(NativeFirebaseFirestoreWrapper(app.js)) }
+public actual fun Firebase.firestore(app: FirebaseApp): FirebaseFirestore = rethrow { FirebaseFirestore(NativeFirebaseFirestoreWrapper(app.js)) }
 
 internal actual data class NativeFirebaseFirestore(val js: JsFirestore)
 
@@ -271,11 +270,9 @@ internal fun errorToException(e: dynamic) = (e?.code ?: e?.message ?: "")
     }
 
 // from: https://discuss.kotlinlang.org/t/how-to-access-native-js-object-as-a-map-string-any/509/8
-internal fun entriesOf(jsObject: dynamic): List<Pair<String, Any?>> =
-    (js("Object.entries") as (dynamic) -> Array<Array<Any?>>)
-        .invoke(jsObject)
-        .map { entry -> entry[0] as String to entry[1] }
+internal fun entriesOf(jsObject: dynamic): List<Pair<String, Any?>> = (js("Object.entries") as (dynamic) -> Array<Array<Any?>>)
+    .invoke(jsObject)
+    .map { entry -> entry[0] as String to entry[1] }
 
 // from: https://discuss.kotlinlang.org/t/how-to-access-native-js-object-as-a-map-string-any/509/8
-internal fun mapOf(jsObject: dynamic): Map<String, Any?> =
-    entriesOf(jsObject).toMap()
+internal fun mapOf(jsObject: dynamic): Map<String, Any?> = entriesOf(jsObject).toMap()

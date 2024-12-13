@@ -56,14 +56,10 @@ public sealed interface MemoryGarbageCollectorSettings {
 public typealias MemoryEagerGcSettings = MemoryGarbageCollectorSettings.Eager
 public typealias MemoryLruGcSettings = MemoryGarbageCollectorSettings.LRUGC
 
-public fun memoryCacheSettings(builder: LocalCacheSettings.Memory.Builder.() -> Unit): LocalCacheSettings.Memory =
-    LocalCacheSettings.Memory.newBuilder().apply(builder).build()
+public fun memoryCacheSettings(builder: LocalCacheSettings.Memory.Builder.() -> Unit): LocalCacheSettings.Memory = LocalCacheSettings.Memory.newBuilder().apply(builder).build()
 
-public fun memoryEagerGcSettings(builder: MemoryGarbageCollectorSettings.Eager.Builder.() -> Unit): MemoryGarbageCollectorSettings.Eager =
-    MemoryGarbageCollectorSettings.Eager.newBuilder().apply(builder).build()
+public fun memoryEagerGcSettings(builder: MemoryGarbageCollectorSettings.Eager.Builder.() -> Unit): MemoryGarbageCollectorSettings.Eager = MemoryGarbageCollectorSettings.Eager.newBuilder().apply(builder).build()
 
-public fun memoryLruGcSettings(builder: MemoryGarbageCollectorSettings.LRUGC.Builder.() -> Unit): MemoryGarbageCollectorSettings.LRUGC =
-    MemoryGarbageCollectorSettings.LRUGC.newBuilder().apply(builder).build()
+public fun memoryLruGcSettings(builder: MemoryGarbageCollectorSettings.LRUGC.Builder.() -> Unit): MemoryGarbageCollectorSettings.LRUGC = MemoryGarbageCollectorSettings.LRUGC.newBuilder().apply(builder).build()
 
-public fun persistentCacheSettings(builder: LocalCacheSettings.Persistent.Builder.() -> Unit): LocalCacheSettings.Persistent =
-    LocalCacheSettings.Persistent.newBuilder().apply(builder).build()
+public fun persistentCacheSettings(builder: LocalCacheSettings.Persistent.Builder.() -> Unit): LocalCacheSettings.Persistent = LocalCacheSettings.Persistent.newBuilder().apply(builder).build()

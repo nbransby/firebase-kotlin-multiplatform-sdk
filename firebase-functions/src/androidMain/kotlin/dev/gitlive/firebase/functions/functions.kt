@@ -22,18 +22,14 @@ public val FirebaseFunctions.android: com.google.firebase.functions.FirebaseFunc
 public actual val Firebase.functions: FirebaseFunctions
     get() = FirebaseFunctions(com.google.firebase.functions.FirebaseFunctions.getInstance())
 
-public actual fun Firebase.functions(region: String): FirebaseFunctions =
-    FirebaseFunctions(com.google.firebase.functions.FirebaseFunctions.getInstance(region))
+public actual fun Firebase.functions(region: String): FirebaseFunctions = FirebaseFunctions(com.google.firebase.functions.FirebaseFunctions.getInstance(region))
 
-public actual fun Firebase.functions(app: FirebaseApp): FirebaseFunctions =
-    FirebaseFunctions(com.google.firebase.functions.FirebaseFunctions.getInstance(app.android))
+public actual fun Firebase.functions(app: FirebaseApp): FirebaseFunctions = FirebaseFunctions(com.google.firebase.functions.FirebaseFunctions.getInstance(app.android))
 
-public actual fun Firebase.functions(app: FirebaseApp, region: String): FirebaseFunctions =
-    FirebaseFunctions(com.google.firebase.functions.FirebaseFunctions.getInstance(app.android, region))
+public actual fun Firebase.functions(app: FirebaseApp, region: String): FirebaseFunctions = FirebaseFunctions(com.google.firebase.functions.FirebaseFunctions.getInstance(app.android, region))
 
 public actual data class FirebaseFunctions internal constructor(internal val android: com.google.firebase.functions.FirebaseFunctions) {
-    public actual fun httpsCallable(name: String, timeout: Duration?): HttpsCallableReference =
-        HttpsCallableReference(android.getHttpsCallable(name).apply { timeout?.let { setTimeout(it.inWholeMilliseconds, TimeUnit.MILLISECONDS) } }.native)
+    public actual fun httpsCallable(name: String, timeout: Duration?): HttpsCallableReference = HttpsCallableReference(android.getHttpsCallable(name).apply { timeout?.let { setTimeout(it.inWholeMilliseconds, TimeUnit.MILLISECONDS) } }.native)
 
     public actual fun useEmulator(host: String, port: Int) {
         android.useEmulator(host, port)
@@ -53,11 +49,9 @@ public val HttpsCallableResult.android: com.google.firebase.functions.HttpsCalla
 
 public actual class HttpsCallableResult(internal val android: com.google.firebase.functions.HttpsCallableResult) {
 
-    public actual inline fun <reified T> data(): T =
-        decode<T>(value = publicAndroid.data)
+    public actual inline fun <reified T> data(): T = decode<T>(value = publicAndroid.data)
 
-    public actual inline fun <T> data(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T =
-        decode(strategy, publicAndroid.data, buildSettings)
+    public actual inline fun <T> data(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(strategy, publicAndroid.data, buildSettings)
 }
 
 public actual typealias FirebaseFunctionsException = com.google.firebase.functions.FirebaseFunctionsException

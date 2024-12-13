@@ -18,8 +18,7 @@ public actual class ServerValue internal actual constructor(
         public actual fun increment(delta: Double): ServerValue = ServerValue(NativeServerValue.increment(delta as NSNumber))
     }
 
-    override fun equals(other: Any?): Boolean =
-        this === other || other is ServerValue && nativeValue == other.nativeValue
+    override fun equals(other: Any?): Boolean = this === other || other is ServerValue && nativeValue == other.nativeValue
     override fun hashCode(): Int = nativeValue.hashCode()
     override fun toString(): String = "ServerValue($nativeValue)"
 }

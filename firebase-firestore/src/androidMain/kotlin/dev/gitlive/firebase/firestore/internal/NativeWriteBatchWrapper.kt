@@ -39,8 +39,7 @@ internal actual class NativeWriteBatchWrapper internal actual constructor(actual
         native.update(documentRef.android, field, value, *moreFieldsAndValues)
     }.let { this }
 
-    actual fun delete(documentRef: DocumentReference) =
-        native.delete(documentRef.android).let { this }
+    actual fun delete(documentRef: DocumentReference) = native.delete(documentRef.android).let { this }
 
     actual suspend fun commit() {
         native.commit().await()

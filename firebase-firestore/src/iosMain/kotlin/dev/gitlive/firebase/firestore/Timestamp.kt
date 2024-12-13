@@ -20,8 +20,7 @@ public actual class Timestamp internal actual constructor(
     public actual val seconds: Long = nativeValue.seconds
     public actual val nanoseconds: Int = nativeValue.nanoseconds
 
-    override fun equals(other: Any?): Boolean =
-        this === other || other is Timestamp && nativeValue == other.nativeValue
+    override fun equals(other: Any?): Boolean = this === other || other is Timestamp && nativeValue == other.nativeValue
     override fun hashCode(): Int = nativeValue.hashCode()
     override fun toString(): String = nativeValue.toString()
 

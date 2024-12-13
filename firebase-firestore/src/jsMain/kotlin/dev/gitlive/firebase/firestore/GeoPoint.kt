@@ -12,8 +12,7 @@ public actual class GeoPoint internal actual constructor(internal actual val nat
     public actual val latitude: Double by nativeValue::latitude
     public actual val longitude: Double by nativeValue::longitude
 
-    override fun equals(other: Any?): Boolean =
-        this === other || other is GeoPoint && nativeValue.isEqual(other.nativeValue)
+    override fun equals(other: Any?): Boolean = this === other || other is GeoPoint && nativeValue.isEqual(other.nativeValue)
     override fun hashCode(): Int = nativeValue.hashCode()
     override fun toString(): String = "GeoPoint[lat=$latitude,long=$longitude]"
 }
