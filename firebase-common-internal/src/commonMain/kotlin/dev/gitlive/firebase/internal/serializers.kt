@@ -128,14 +128,14 @@ public class SpecialValueSerializer<T>(
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor(serialName) { }
 
     override fun serialize(encoder: Encoder, value: T) {
-        if (encoder is FirebaseEncoder) {
+        if (encoder is FirebaseEncoderImpl) {
             encoder.value = toNativeValue(value)
         } else {
             throw SerializationException("This serializer must be used with FirebaseEncoder")
         }
     }
 
-    override fun deserialize(decoder: Decoder): T = if (decoder is FirebaseDecoder) {
+    override fun deserialize(decoder: Decoder): T = if (decoder is FirebaseDecoderImpl) {
         fromNativeValue(decoder.value)
     } else {
         throw SerializationException("This serializer must be used with FirebaseDecoder")

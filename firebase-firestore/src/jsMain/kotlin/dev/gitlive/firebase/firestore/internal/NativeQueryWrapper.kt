@@ -45,17 +45,17 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
         is Filter.Or -> or(*filters.map { it.toQueryConstraint() }.toTypedArray())
         is Filter.Field -> {
             val value = when (constraint) {
-                is WhereConstraint.ForNullableObject -> constraint.safeValue
-                is WhereConstraint.ForObject -> constraint.safeValue
-                is WhereConstraint.ForArray -> constraint.safeValues.toTypedArray()
+                is WhereConstraint.ForNullableObject -> constraint.value
+                is WhereConstraint.ForObject -> constraint.value
+                is WhereConstraint.ForArray -> constraint.values.toTypedArray()
             }
             dev.gitlive.firebase.firestore.externals.where(field, constraint.filterOp, value)
         }
         is Filter.Path -> {
             val value = when (constraint) {
-                is WhereConstraint.ForNullableObject -> constraint.safeValue
-                is WhereConstraint.ForObject -> constraint.safeValue
-                is WhereConstraint.ForArray -> constraint.safeValues.toTypedArray()
+                is WhereConstraint.ForNullableObject -> constraint.value
+                is WhereConstraint.ForObject -> constraint.value
+                is WhereConstraint.ForArray -> constraint.values.toTypedArray()
             }
             dev.gitlive.firebase.firestore.externals.where(path.js, constraint.filterOp, value)
         }

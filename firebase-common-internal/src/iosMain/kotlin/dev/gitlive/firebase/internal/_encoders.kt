@@ -9,7 +9,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlin.collections.set
 
-public actual fun FirebaseEncoder.structureEncoder(descriptor: SerialDescriptor): FirebaseCompositeEncoder = when (descriptor.kind) {
+internal actual fun FirebaseEncoderImpl.structureEncoder(descriptor: SerialDescriptor): FirebaseCompositeEncoder = when (descriptor.kind) {
     StructureKind.LIST -> encodeAsList()
     StructureKind.MAP -> mutableListOf<Any?>()
         .let { FirebaseCompositeEncoder(settings, { value = it.chunked(2).associate { (k, v) -> k to v } }) { _, _, value -> it.add(value) } }
@@ -18,10 +18,10 @@ public actual fun FirebaseEncoder.structureEncoder(descriptor: SerialDescriptor)
     else -> TODO("The firebase-kotlin-sdk does not support $descriptor for serialization yet")
 }
 
-private fun FirebaseEncoder.encodeAsList(): FirebaseCompositeEncoder = mutableListOf<Any?>()
+private fun FirebaseEncoderImpl.encodeAsList(): FirebaseCompositeEncoder = mutableListOf<Any?>()
     .also { value = it }
     .let { FirebaseCompositeEncoder(settings) { _, index, value -> it.add(index, value) } }
-private fun FirebaseEncoder.encodeAsMap(descriptor: SerialDescriptor): FirebaseCompositeEncoder = mutableMapOf<Any?, Any?>()
+private fun FirebaseEncoderImpl.encodeAsMap(descriptor: SerialDescriptor): FirebaseCompositeEncoder = mutableMapOf<Any?, Any?>()
     .also { value = it }
     .let {
         FirebaseCompositeEncoder(

@@ -1,7 +1,7 @@
 package dev.gitlive.firebase.firestore
 
+import dev.gitlive.firebase.FirebaseEncoder
 import dev.gitlive.firebase.firestore.internal.NativeDocumentReference
-import dev.gitlive.firebase.internal.FirebaseEncoder
 import dev.gitlive.firebase.internal.SpecialValueSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException

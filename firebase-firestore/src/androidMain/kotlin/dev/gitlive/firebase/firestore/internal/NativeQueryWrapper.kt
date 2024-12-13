@@ -59,7 +59,7 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
                         is WhereConstraint.EqualTo -> com.google.firebase.firestore.Filter::equalTo
                         is WhereConstraint.NotEqualTo -> com.google.firebase.firestore.Filter::notEqualTo
                     }
-                    modifier.invoke(field, constraint.safeValue)
+                    modifier.invoke(field, constraint.value)
                 }
                 is WhereConstraint.ForObject -> {
                     val modifier: (String, Any) -> com.google.firebase.firestore.Filter = when (constraint) {
@@ -69,7 +69,7 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
                         is WhereConstraint.GreaterThanOrEqualTo -> com.google.firebase.firestore.Filter::greaterThanOrEqualTo
                         is WhereConstraint.ArrayContains -> com.google.firebase.firestore.Filter::arrayContains
                     }
-                    modifier.invoke(field, constraint.safeValue)
+                    modifier.invoke(field, constraint.value)
                 }
                 is WhereConstraint.ForArray -> {
                     val modifier: (String, List<Any>) -> com.google.firebase.firestore.Filter = when (constraint) {
@@ -77,7 +77,7 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
                         is WhereConstraint.ArrayContainsAny -> com.google.firebase.firestore.Filter::arrayContainsAny
                         is WhereConstraint.NotInArray -> com.google.firebase.firestore.Filter::notInArray
                     }
-                    modifier.invoke(field, constraint.safeValues)
+                    modifier.invoke(field, constraint.values)
                 }
             }
         }
@@ -88,7 +88,7 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
                         is WhereConstraint.EqualTo -> com.google.firebase.firestore.Filter::equalTo
                         is WhereConstraint.NotEqualTo -> com.google.firebase.firestore.Filter::notEqualTo
                     }
-                    modifier.invoke(path.android, constraint.safeValue)
+                    modifier.invoke(path.android, constraint.value)
                 }
                 is WhereConstraint.ForObject -> {
                     val modifier: (FieldPath, Any) -> com.google.firebase.firestore.Filter = when (constraint) {
@@ -98,7 +98,7 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
                         is WhereConstraint.GreaterThanOrEqualTo -> com.google.firebase.firestore.Filter::greaterThanOrEqualTo
                         is WhereConstraint.ArrayContains -> com.google.firebase.firestore.Filter::arrayContains
                     }
-                    modifier.invoke(path.android, constraint.safeValue)
+                    modifier.invoke(path.android, constraint.value)
                 }
                 is WhereConstraint.ForArray -> {
                     val modifier: (FieldPath, List<Any>) -> com.google.firebase.firestore.Filter = when (constraint) {
@@ -106,7 +106,7 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
                         is WhereConstraint.ArrayContainsAny -> com.google.firebase.firestore.Filter::arrayContainsAny
                         is WhereConstraint.NotInArray -> com.google.firebase.firestore.Filter::notInArray
                     }
-                    modifier.invoke(path.android, constraint.safeValues)
+                    modifier.invoke(path.android, constraint.values)
                 }
             }
         }

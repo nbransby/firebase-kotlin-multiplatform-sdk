@@ -263,6 +263,47 @@ class EncodersTest {
     }
 
     @Test
+    fun encodeDecodeNestedClassWithEmptyCollections() {
+        val module = SerializersModule {
+            polymorphic(AbstractClass::class, AbstractClass.serializer()) {
+                subclass(ImplementedClass::class, ImplementedClass.serializer())
+            }
+        }
+
+        val testData = TestData(mapOf(), mapOf(), true, null, ValueClass(42))
+        val sealedClass: SealedClass = SealedClass.Test("value")
+        val abstractClass: AbstractClass = ImplementedClass("value", true)
+        val nestedClass = NestedClass(testData, sealedClass, abstractClass, listOf(), listOf(), listOf(), mapOf(), mapOf(), mapOf())
+        val encoded = encode(NestedClass.serializer(), nestedClass) {
+            encodeDefaults = true
+            serializersModule = module
+        }
+
+        val testDataEncoded = nativeMapOf("map" to nativeMapOf(), "otherMap" to nativeMapOf(), "bool" to true, "nullableBool" to null, "valueClass" to 42)
+        val sealedEncoded = nativeMapOf("type" to "test", "value" to "value")
+        val abstractEncoded = nativeMapOf("type" to "implemented", "abstractValue" to "value", "otherValue" to true)
+        nativeAssertEquals(
+            nativeMapOf(
+                "testData" to testDataEncoded,
+                "sealed" to sealedEncoded,
+                "abstract" to abstractEncoded,
+                "testDataList" to nativeListOf(),
+                "sealedList" to nativeListOf(),
+                "abstractList" to nativeListOf(),
+                "testDataMap" to nativeMapOf(),
+                "sealedMap" to nativeMapOf(),
+                "abstractMap" to nativeMapOf(),
+            ),
+            encoded,
+        )
+
+        val decoded = decode(NestedClass.serializer(), encoded) {
+            serializersModule = module
+        }
+        assertEquals(nestedClass, decoded)
+    }
+
+    @Test
     fun reencodeTransformationList() {
         val reencoded = reencodeTransformation<List<String>>(nativeListOf("One", "Two", "Three")) {
             assertEquals(listOf("One", "Two", "Three"), it)

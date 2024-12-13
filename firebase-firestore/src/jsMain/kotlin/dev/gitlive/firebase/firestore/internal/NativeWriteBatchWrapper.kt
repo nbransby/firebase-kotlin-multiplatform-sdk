@@ -1,7 +1,6 @@
 package dev.gitlive.firebase.firestore.internal
 
 import dev.gitlive.firebase.firestore.DocumentReference
-import dev.gitlive.firebase.firestore.EncodedFieldPath
 import dev.gitlive.firebase.firestore.NativeWriteBatch
 import dev.gitlive.firebase.firestore.externals.WriteBatch
 import dev.gitlive.firebase.firestore.js
@@ -26,22 +25,18 @@ internal actual class NativeWriteBatchWrapper internal actual constructor(actual
     actual fun updateEncoded(documentRef: DocumentReference, encodedData: EncodedObject): NativeWriteBatchWrapper = rethrow { js.update(documentRef.js, encodedData.js) }
         .let { this }
 
-    actual fun updateEncodedFieldsAndValues(
+    actual fun updateEncoded(
         documentRef: DocumentReference,
-        encodedFieldsAndValues: List<Pair<String, Any?>>,
+        encodedFieldsAndValues: List<FieldAndValue>,
     ): NativeWriteBatchWrapper = rethrow {
-        encodedFieldsAndValues.performUpdate { field, value, moreFieldsAndValues ->
-            js.update(documentRef.js, field, value, *moreFieldsAndValues)
-        }
-    }.let { this }
-
-    actual fun updateEncodedFieldPathsAndValues(
-        documentRef: DocumentReference,
-        encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>,
-    ): NativeWriteBatchWrapper = rethrow {
-        encodedFieldsAndValues.performUpdate { field, value, moreFieldsAndValues ->
-            js.update(documentRef.js, field, value, *moreFieldsAndValues)
-        }
+        encodedFieldsAndValues.performUpdate(
+            updateAsField = { field, value, moreFieldsAndValues ->
+                js.update(documentRef.js, field, value, *moreFieldsAndValues)
+            },
+            updateAsFieldPath = { fieldPath, value, moreFieldsAndValues ->
+                js.update(documentRef.js, fieldPath, value, *moreFieldsAndValues)
+            },
+        )
     }.let { this }
 
     actual fun delete(documentRef: DocumentReference) =

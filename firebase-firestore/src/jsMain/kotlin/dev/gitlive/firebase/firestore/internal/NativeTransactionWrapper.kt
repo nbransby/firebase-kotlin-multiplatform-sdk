@@ -1,7 +1,6 @@
 package dev.gitlive.firebase.firestore.internal
 
 import dev.gitlive.firebase.firestore.DocumentReference
-import dev.gitlive.firebase.firestore.EncodedFieldPath
 import dev.gitlive.firebase.firestore.NativeTransaction
 import dev.gitlive.firebase.firestore.externals.Transaction
 import dev.gitlive.firebase.firestore.js
@@ -29,22 +28,18 @@ internal actual class NativeTransactionWrapper internal actual constructor(actua
     actual fun updateEncoded(documentRef: DocumentReference, encodedData: EncodedObject): NativeTransactionWrapper = rethrow { js.update(documentRef.js, encodedData.js) }
         .let { this }
 
-    actual fun updateEncodedFieldsAndValues(
+    actual fun updateEncoded(
         documentRef: DocumentReference,
-        encodedFieldsAndValues: List<Pair<String, Any?>>,
+        encodedFieldsAndValues: List<FieldAndValue>,
     ): NativeTransactionWrapper = rethrow {
-        encodedFieldsAndValues.performUpdate { field, value, moreFieldsAndValues ->
-            js.update(documentRef.js, field, value, *moreFieldsAndValues)
-        }
-    }.let { this }
-
-    actual fun updateEncodedFieldPathsAndValues(
-        documentRef: DocumentReference,
-        encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>,
-    ): NativeTransactionWrapper = rethrow {
-        encodedFieldsAndValues.performUpdate { field, value, moreFieldsAndValues ->
-            js.update(documentRef.js, field, value, *moreFieldsAndValues)
-        }
+        encodedFieldsAndValues.performUpdate(
+            updateAsField = { field, value, moreFieldsAndValues ->
+                js.update(documentRef.js, field, value, *moreFieldsAndValues)
+            },
+            updateAsFieldPath = { fieldPath, value, moreFieldsAndValues ->
+                js.update(documentRef.js, fieldPath, value, *moreFieldsAndValues)
+            },
+        )
     }.let { this }
 
     actual fun delete(documentRef: DocumentReference) =

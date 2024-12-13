@@ -1,7 +1,7 @@
 package dev.gitlive.firebase.database
 
-import dev.gitlive.firebase.internal.FirebaseDecoder
-import dev.gitlive.firebase.internal.FirebaseEncoder
+import dev.gitlive.firebase.FirebaseEncoder
+import dev.gitlive.firebase.FirebaseDecoder
 import dev.gitlive.firebase.internal.SpecialValueSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

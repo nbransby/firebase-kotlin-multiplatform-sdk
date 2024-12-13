@@ -42,7 +42,7 @@ Asynchronous operations that return a single or no value are represented by susp
 suspend fun signInWithCustomToken(token: String): AuthResult
 ```
 
-It is important to remember that unlike a callback based API, wating for suspending functions to complete is implicit and so if you don't want to wait for the result you can `launch` a new coroutine:
+It is important to remember that unlike a callback based API, waiting for suspending functions to complete is implicit and so if you don't want to wait for the result you can `launch` a new coroutine:
 
 ```kotlin
 //TODO don't use GlobalScope
@@ -185,6 +185,44 @@ In combination with a `SerialName` specified for the child class, you have full 
 }
 ```
 
+<h4>Serialization of Updates</h4>
+Firestore contains update methods that allow for multiple fields to be updated at the same time. 
+This sdk offers special update methods that allow for applying custom serialization to each individual field though an update builder.
+Where an `update` method exists, an `updateFields` method will also be available. In this, each value can have its serializer customized:
+
+```kotlin
+documentRef.updateFields {
+    "field" to "value"
+    // Set the value of otherField to "1" using a custom Serializer
+    "otherField".to(IntAsStringSerializer(), 1)
+    
+    // Overwrite build settings. All fields added within this block will have these build settings applied
+    withEncodeSettings {
+        encodeDefaults = true
+        serializersModule = module
+        "city" to abstractCity
+    }
+}
+```
+
+Similarly, the `Query` methods `startAt`/`startAfter`/`endAt`/`endBefore` have an alternative method in `startAtFieldValues`/`startAfterFieldValues`/`endAtFieldValues`/`endBeforeFieldValues`
+
+```kotlin
+query.orderBy("field", "otherField", "city").startAtFieldValues { // similar syntax for startAfter/endAt/endBefore
+    add("Value")
+
+    // Starts at "1" for the otherField value
+    add(1, IntAsStringSerializer())
+
+    // Overwrite build settings. All field values added within this block will have these build settings applied
+    withEncodeSettings {
+        encodeDefaults = true
+        serializersModule = module
+        add(abstractCity)
+    }
+}
+```
+
 <h3><a href="https://kotlinlang.org/docs/reference/functions.html#default-arguments">Default arguments</a></h3>
 
 To reduce boilerplate, default arguments are used in the places where the Firebase Android SDK employs the builder pattern:
@@ -208,8 +246,6 @@ user.updateProfile(profileUpdates)
 
 user.updateProfile(displayName = "Jane Q. User", photoURL = "https://example.com/jane-q-user/profile.jpg")
 ```
-
-
 
 <h3><a href="https://kotlinlang.org/docs/functions.html#infix-notation">Infix notation</a></h3>
 

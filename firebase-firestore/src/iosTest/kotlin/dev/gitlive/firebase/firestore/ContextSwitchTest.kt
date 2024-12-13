@@ -121,28 +121,38 @@ class ContextSwitchTest {
         },
     ) { data ->
 
-        fun getDocument() = firestore.collection("fieldValuesOps")
+        val doc = firestore.collection("fieldValuesOps")
             .document("fieldValuesOps")
 
-        // store
-        getDocument().set(strategy = TestData.serializer(), data = TestData(data.initial), merge = false)
+        try {
+            // store
+            doc.set(
+                strategy = TestData.serializer(),
+                data = TestData(data.initial),
+                merge = false,
+            )
 
-        // append & verify
-        getDocument().update(data.updates[0].op)
+            // append & verify
+            doc.update(data.updates[0].op)
 
-        var savedData = getDocument().get().data(TestData.serializer())
-        assertEquals(data.updates[0].expected, savedData.values)
+            var savedData = doc.get().data(TestData.serializer())
+            assertEquals(data.updates[0].expected, savedData.values)
 
-        // remove & verify
-        getDocument().update(data.updates[1].op)
-        savedData = getDocument().get().data(TestData.serializer())
-        assertEquals(data.updates[1].expected, savedData.values)
+            // remove & verify
+            doc.update(data.updates[1].op)
+            savedData = doc.get().data(TestData.serializer())
+            assertEquals(data.updates[1].expected, savedData.values)
 
-        val list = getDocument().get().get(TestData::values.name, ListSerializer(Int.serializer()).nullable)
-        assertEquals(data.updates[1].expected, list)
-        // delete & verify
-        getDocument().update(data.updates[2].op)
-        val deletedList = getDocument().get().get(TestData::values.name, ListSerializer(Int.serializer()).nullable)
-        assertEquals(data.updates[2].expected, deletedList)
+            val list = doc.get()
+                .get(TestData::values.name, ListSerializer(Int.serializer()).nullable)
+            assertEquals(data.updates[1].expected, list)
+            // delete & verify
+            doc.update(data.updates[2].op)
+            val deletedList = doc.get()
+                .get(TestData::values.name, ListSerializer(Int.serializer()).nullable)
+            assertEquals(data.updates[2].expected, deletedList)
+        } finally {
+            doc.delete()
+        }
     }
 }

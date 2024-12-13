@@ -13,6 +13,11 @@ public abstract interface class dev/gitlive/firebase/EncodeDecodeSettings {
 public abstract interface class dev/gitlive/firebase/EncodeDecodeSettingsBuilder : dev/gitlive/firebase/DecodeSettings$Builder, dev/gitlive/firebase/EncodeSettings$Builder {
 }
 
+public final class dev/gitlive/firebase/EncodeDecodeSettingsKt {
+	public static final fun copyFrom (Ldev/gitlive/firebase/DecodeSettings$Builder;Ldev/gitlive/firebase/DecodeSettings$Builder;)V
+	public static final fun copyFrom (Ldev/gitlive/firebase/EncodeSettings$Builder;Ldev/gitlive/firebase/EncodeSettings$Builder;)V
+}
+
 public abstract interface class dev/gitlive/firebase/EncodeSettings : dev/gitlive/firebase/EncodeDecodeSettings {
 	public abstract fun getEncodeDefaults ()Z
 }
@@ -31,5 +36,23 @@ public abstract interface annotation class dev/gitlive/firebase/FirebaseClassDis
 public synthetic class dev/gitlive/firebase/FirebaseClassDiscriminator$Impl : dev/gitlive/firebase/FirebaseClassDiscriminator {
 	public fun <init> (Ljava/lang/String;)V
 	public final synthetic fun discriminator ()Ljava/lang/String;
+}
+
+public abstract interface class dev/gitlive/firebase/FirebaseDecoder : kotlinx/serialization/encoding/Decoder {
+}
+
+public final class dev/gitlive/firebase/FirebaseDecoder$DefaultImpls {
+	public static fun decodeNullableSerializableValue (Ldev/gitlive/firebase/FirebaseDecoder;Lkotlinx/serialization/DeserializationStrategy;)Ljava/lang/Object;
+	public static fun decodeSerializableValue (Ldev/gitlive/firebase/FirebaseDecoder;Lkotlinx/serialization/DeserializationStrategy;)Ljava/lang/Object;
+}
+
+public abstract interface class dev/gitlive/firebase/FirebaseEncoder : kotlinx/serialization/encoding/Encoder {
+}
+
+public final class dev/gitlive/firebase/FirebaseEncoder$DefaultImpls {
+	public static fun beginCollection (Ldev/gitlive/firebase/FirebaseEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;I)Lkotlinx/serialization/encoding/CompositeEncoder;
+	public static fun encodeNotNullMark (Ldev/gitlive/firebase/FirebaseEncoder;)V
+	public static fun encodeNullableSerializableValue (Ldev/gitlive/firebase/FirebaseEncoder;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)V
+	public static fun encodeSerializableValue (Ldev/gitlive/firebase/FirebaseEncoder;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)V
 }
 

@@ -1,10 +1,10 @@
 package dev.gitlive.firebase.firestore.internal
 
 import dev.gitlive.firebase.firestore.DocumentReference
-import dev.gitlive.firebase.firestore.EncodedFieldPath
 import dev.gitlive.firebase.firestore.NativeWriteBatch
 import dev.gitlive.firebase.firestore.await
 import dev.gitlive.firebase.firestore.ios
+import dev.gitlive.firebase.firestore.toEncodedMap
 import dev.gitlive.firebase.internal.EncodedObject
 import dev.gitlive.firebase.internal.ios
 
@@ -23,19 +23,11 @@ internal actual class NativeWriteBatchWrapper actual constructor(actual val nati
 
     actual fun updateEncoded(documentRef: DocumentReference, encodedData: EncodedObject): NativeWriteBatchWrapper = native.updateData(encodedData.ios, documentRef.ios).let { this }
 
-    actual fun updateEncodedFieldsAndValues(
+    actual fun updateEncoded(
         documentRef: DocumentReference,
-        encodedFieldsAndValues: List<Pair<String, Any?>>,
+        encodedFieldsAndValues: List<FieldAndValue>,
     ): NativeWriteBatchWrapper = native.updateData(
-        encodedFieldsAndValues.toMap(),
-        documentRef.ios,
-    ).let { this }
-
-    actual fun updateEncodedFieldPathsAndValues(
-        documentRef: DocumentReference,
-        encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>,
-    ): NativeWriteBatchWrapper = native.updateData(
-        encodedFieldsAndValues.toMap(),
+        encodedFieldsAndValues.toEncodedMap(),
         documentRef.ios,
     ).let { this }
 

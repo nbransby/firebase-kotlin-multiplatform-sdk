@@ -1,6 +1,5 @@
 package dev.gitlive.firebase.firestore.internal
 
-import dev.gitlive.firebase.firestore.EncodedFieldPath
 import dev.gitlive.firebase.firestore.NativeCollectionReference
 import dev.gitlive.firebase.firestore.NativeDocumentReferenceType
 import dev.gitlive.firebase.firestore.NativeDocumentSnapshot
@@ -20,7 +19,6 @@ internal expect class NativeDocumentReference(nativeValue: NativeDocumentReferen
     suspend fun get(source: Source = Source.DEFAULT): NativeDocumentSnapshot
     suspend fun setEncoded(encodedData: EncodedObject, setOptions: SetOptions)
     suspend fun updateEncoded(encodedData: EncodedObject)
-    suspend fun updateEncodedFieldsAndValues(encodedFieldsAndValues: List<Pair<String, Any?>>)
-    suspend fun updateEncodedFieldPathsAndValues(encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>)
+    suspend fun updateEncoded(encodedFieldsAndValues: List<FieldAndValue>)
     suspend fun delete()
 }

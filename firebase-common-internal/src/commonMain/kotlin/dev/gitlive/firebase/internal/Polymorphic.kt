@@ -12,7 +12,7 @@ import kotlinx.serialization.internal.AbstractPolymorphicSerializer
  * See https://github.com/Kotlin/kotlinx.serialization/blob/master/formats/json/commonMain/src/kotlinx/serialization/json/internal/Polymorphic.kt
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <T> FirebaseEncoder.encodePolymorphically(
+internal fun <T> FirebaseEncoderImpl.encodePolymorphically(
     serializer: SerializationStrategy<T>,
     value: T,
     ifPolymorphic: (String) -> Unit,
@@ -34,7 +34,7 @@ internal fun <T> FirebaseEncoder.encodePolymorphically(
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun <T> FirebaseDecoder.decodeSerializableValuePolymorphic(
+internal fun <T> FirebaseDecoderImpl.decodeSerializableValuePolymorphic(
     value: Any?,
     deserializer: DeserializationStrategy<T>,
 ): T {

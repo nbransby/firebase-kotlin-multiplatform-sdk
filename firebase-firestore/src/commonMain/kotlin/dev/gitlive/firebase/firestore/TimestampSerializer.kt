@@ -1,5 +1,7 @@
 package dev.gitlive.firebase.firestore
 
+import dev.gitlive.firebase.FirebaseEncoder
+import dev.gitlive.firebase.FirebaseDecoder
 import dev.gitlive.firebase.internal.SpecialValueSerializer
 import dev.gitlive.firebase.firestore.DoubleAsTimestampSerializer.SERVER_TIMESTAMP
 import kotlinx.serialization.KSerializer

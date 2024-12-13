@@ -18,7 +18,6 @@ import dev.gitlive.firebase.firestore.internal.NativeQueryWrapper
 import dev.gitlive.firebase.firestore.internal.NativeTransactionWrapper
 import dev.gitlive.firebase.firestore.internal.NativeWriteBatchWrapper
 import dev.gitlive.firebase.firestore.internal.SetOptions
-import dev.gitlive.firebase.firestore.internal.safeValue
 import dev.gitlive.firebase.internal.decode
 import dev.gitlive.firebase.internal.encodeAsObject
 import kotlinx.coroutines.flow.Flow
@@ -179,31 +178,61 @@ public data class Transaction internal constructor(internal val nativeWrapper: N
     internal fun setEncoded(documentRef: DocumentReference, encodedData: EncodedObject, setOptions: SetOptions): Transaction = Transaction(nativeWrapper.setEncoded(documentRef, encodedData, setOptions))
 
     @Deprecated("Deprecated. Use builder instead", replaceWith = ReplaceWith("update(documentRef, data) { this.encodeDefaults = encodeDefaults }"))
-    public fun update(documentRef: DocumentReference, data: Any, encodeDefaults: Boolean): Transaction = update(documentRef, data) {
-        this.encodeDefaults = encodeDefaults
-    }
+    public fun update(documentRef: DocumentReference, data: Any, encodeDefaults: Boolean): Transaction =
+        update(documentRef, data) {
+            this.encodeDefaults = encodeDefaults
+        }
     public inline fun update(documentRef: DocumentReference, data: Any, buildSettings: EncodeSettings.Builder.() -> Unit = {}): Transaction = updateEncoded(documentRef, encodeAsObject(data, buildSettings))
 
     @Deprecated("Deprecated. Use builder instead", replaceWith = ReplaceWith("update(documentRef, strategy, data) { this.encodeDefaults = encodeDefaults }"))
-    public fun <T : Any> update(documentRef: DocumentReference, strategy: SerializationStrategy<T>, data: T, encodeDefaults: Boolean): Transaction = update(documentRef, strategy, data) {
-        this.encodeDefaults = encodeDefaults
-    }
+    public fun <T : Any> update(documentRef: DocumentReference, strategy: SerializationStrategy<T>, data: T, encodeDefaults: Boolean): Transaction =
+        update(documentRef, strategy, data) {
+            this.encodeDefaults = encodeDefaults
+        }
     public inline fun <T : Any> update(documentRef: DocumentReference, strategy: SerializationStrategy<T>, data: T, buildSettings: EncodeSettings.Builder.() -> Unit = {}): Transaction = updateEncoded(documentRef, encodeAsObject(strategy, data, buildSettings))
 
     @JvmName("updateFields")
-    public inline fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<String, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit = {}): Transaction = updateEncodedFieldsAndValues(documentRef, encodeFieldAndValue(fieldsAndValues, buildSettings).orEmpty())
+    public fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<String, Any?>): Transaction =
+        update(documentRef, *fieldsAndValues) {}
+
+    @JvmName("updateFields")
+    public fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<String, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit): Transaction =
+        updateFields(
+            documentRef,
+        ) {
+            apply(buildSettings)
+            fieldsAndValues.forEach { (field, value) ->
+                field to value
+            }
+        }
 
     @JvmName("updateFieldPaths")
-    public inline fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<FieldPath, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit = {}): Transaction = updateEncodedFieldPathsAndValues(documentRef, encodeFieldAndValue(fieldsAndValues, buildSettings).orEmpty())
+    public fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<FieldPath, Any?>): Transaction =
+        update(documentRef, *fieldsAndValues) {}
+
+    @JvmName("updateFieldPaths")
+    public fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<FieldPath, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit): Transaction =
+        updateFields(
+            documentRef,
+        ) {
+            apply(buildSettings)
+            fieldsAndValues.forEach { (field, value) ->
+                field to value
+            }
+        }
+
+    /**
+     * Updates Fields/[FieldPath] of a [DocumentReference] using a [FieldsAndValuesUpdateDSL].
+     * @param documentRef the [DocumentReference] to update
+     * @param fieldsAndValuesUpdateDSL closure for configuring the [FieldsAndValuesUpdateDSL]
+     */
+    public fun updateFields(
+        documentRef: DocumentReference,
+        fieldsAndValuesUpdateDSL: FieldsAndValuesUpdateDSL.() -> Unit,
+    ): Transaction = Transaction(nativeWrapper.updateEncoded(documentRef, FieldsAndValuesUpdateDSL().apply(fieldsAndValuesUpdateDSL).fieldsAndValues))
 
     @PublishedApi
     internal fun updateEncoded(documentRef: DocumentReference, encodedData: EncodedObject): Transaction = Transaction(nativeWrapper.updateEncoded(documentRef, encodedData))
-
-    @PublishedApi
-    internal fun updateEncodedFieldsAndValues(documentRef: DocumentReference, encodedFieldsAndValues: List<Pair<String, Any?>>): Transaction = Transaction(nativeWrapper.updateEncodedFieldsAndValues(documentRef, encodedFieldsAndValues))
-
-    @PublishedApi
-    internal fun updateEncodedFieldPathsAndValues(documentRef: DocumentReference, encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>): Transaction = Transaction(nativeWrapper.updateEncodedFieldPathsAndValues(documentRef, encodedFieldsAndValues))
 
     public fun delete(documentRef: DocumentReference): Transaction = Transaction(nativeWrapper.delete(documentRef))
     public suspend fun get(documentRef: DocumentReference): DocumentSnapshot = DocumentSnapshot(nativeWrapper.get(documentRef))
@@ -230,14 +259,79 @@ public open class Query internal constructor(internal val nativeQuery: NativeQue
     public fun orderBy(field: FieldPath, direction: Direction = Direction.ASCENDING): Query = Query(nativeQuery.orderBy(field.encoded, direction))
 
     public fun startAfter(document: DocumentSnapshot): Query = Query(nativeQuery.startAfter(document.native))
-    public fun startAfter(vararg fieldValues: Any): Query = Query(nativeQuery.startAfter(*(fieldValues.map { it.safeValue }.toTypedArray())))
+    public fun startAfter(vararg fieldValues: Any?): Query = startAfter(*fieldValues) {}
+    public fun startAfter(vararg fieldValues: Any?, buildSettings: EncodeSettings.Builder.() -> Unit): Query =
+        startAfterFieldValues {
+            apply(buildSettings)
+
+            fieldValues.forEach {
+                add(it)
+            }
+        }
+
+    /**
+     * Creates and returns a new [Query] that starts after the provided fields relative to the order of the query.
+     * The field values are configured using a [FieldValuesDSL].
+     * The order of the field values must match the order of the [orderBy] clauses of the query
+     * @param builder closure for configuring the [FieldValuesDSL]
+     */
+    public fun startAfterFieldValues(builder: FieldValuesDSL.() -> Unit): Query = Query(nativeQuery.startAfter(*FieldValuesDSL().apply(builder).fieldValues.toTypedArray()))
+
     public fun startAt(document: DocumentSnapshot): Query = Query(nativeQuery.startAt(document.native))
-    public fun startAt(vararg fieldValues: Any): Query = Query(nativeQuery.startAt(*(fieldValues.map { it.safeValue }.toTypedArray())))
+    public fun startAt(vararg fieldValues: Any?): Query = startAt(*fieldValues) {}
+    public fun startAt(vararg fieldValues: Any?, buildSettings: EncodeSettings.Builder.() -> Unit): Query =
+        startAtFieldValues {
+            apply(buildSettings)
+            fieldValues.forEach {
+                add(it)
+            }
+        }
+
+    /**
+     * Creates and returns a new [Query] that starts at the provided fields relative to the order of the query.
+     * The field values are configured using a [FieldValuesDSL].
+     * The order of the field values must match the order of the [orderBy] clauses of the query
+     * @param builder closure for configuring the [FieldValuesDSL]
+     */
+    public fun startAtFieldValues(builder: FieldValuesDSL.() -> Unit): Query = Query(nativeQuery.startAt(*FieldValuesDSL().apply(builder).fieldValues.toTypedArray()))
 
     public fun endBefore(document: DocumentSnapshot): Query = Query(nativeQuery.endBefore(document.native))
-    public fun endBefore(vararg fieldValues: Any): Query = Query(nativeQuery.endBefore(*(fieldValues.map { it.safeValue }.toTypedArray())))
+    public fun endBefore(vararg fieldValues: Any?): Query = endBefore(*fieldValues) {}
+    public fun endBefore(vararg fieldValues: Any?, buildSettings: EncodeSettings.Builder.() -> Unit): Query =
+        endBeforeFieldValues {
+            withEncodeSettings {
+                apply(buildSettings)
+                fieldValues.forEach {
+                    add(it)
+                }
+            }
+        }
+
+    /**
+     * Creates and returns a new [Query] that ends before the provided fields relative to the order of the query.
+     * The field values are configured using a [FieldValuesDSL].
+     * The order of the field values must match the order of the [orderBy] clauses of the query
+     * @param builder closure for configuring the [FieldValuesDSL]
+     */
+    public fun endBeforeFieldValues(builder: FieldValuesDSL.() -> Unit): Query = Query(nativeQuery.endBefore(*FieldValuesDSL().apply(builder).fieldValues.toTypedArray()))
+
     public fun endAt(document: DocumentSnapshot): Query = Query(nativeQuery.endAt(document.native))
-    public fun endAt(vararg fieldValues: Any): Query = Query(nativeQuery.endAt(*(fieldValues.map { it.safeValue }.toTypedArray())))
+    public fun endAt(vararg fieldValues: Any?): Query = endAt(*fieldValues) {}
+    public fun endAt(vararg fieldValues: Any?, buildSettings: EncodeSettings.Builder.() -> Unit): Query =
+        endAtFieldValues {
+            apply(buildSettings)
+            fieldValues.forEach {
+                add(it)
+            }
+        }
+
+    /**
+     * Creates and returns a new [Query] that ends at the provided fields relative to the order of the query.
+     * The field values are configured using a [FieldValuesDSL].
+     * The order of the field values must match the order of the [orderBy] clauses of the query
+     * @param builder closure for configuring the [FieldValuesDSL]
+     */
+    public fun endAtFieldValues(builder: FieldValuesDSL.() -> Unit): Query = Query(nativeQuery.endAt(*FieldValuesDSL().apply(builder).fieldValues.toTypedArray()))
 }
 
 @Deprecated("Deprecated in favor of using a [FilterBuilder]", replaceWith = ReplaceWith("where { field equalTo equalTo }", "dev.gitlive.firebase.firestore"))
@@ -348,33 +442,68 @@ public data class WriteBatch internal constructor(internal val nativeWrapper: Na
     internal fun setEncoded(documentRef: DocumentReference, encodedData: EncodedObject, setOptions: SetOptions): WriteBatch = WriteBatch(nativeWrapper.setEncoded(documentRef, encodedData, setOptions))
 
     @Deprecated("Deprecated. Use builder instead", replaceWith = ReplaceWith("update(documentRef, data) { this.encodeDefaults = encodeDefaults }"))
-    public inline fun <reified T : Any> update(documentRef: DocumentReference, data: T, encodeDefaults: Boolean): WriteBatch = update(documentRef, data) {
-        this.encodeDefaults = encodeDefaults
-    }
+    public inline fun <reified T : Any> update(documentRef: DocumentReference, data: T, encodeDefaults: Boolean): WriteBatch =
+        update(documentRef, data) {
+            this.encodeDefaults = encodeDefaults
+        }
     public inline fun <reified T : Any> update(documentRef: DocumentReference, data: T, buildSettings: EncodeSettings.Builder.() -> Unit = {}): WriteBatch =
         updateEncoded(documentRef, encodeAsObject(data, buildSettings))
 
     @Deprecated("Deprecated. Use builder instead", replaceWith = ReplaceWith("update(documentRef, strategy, data) { this.encodeDefaults = encodeDefaults }"))
-    public fun <T : Any> update(documentRef: DocumentReference, strategy: SerializationStrategy<T>, data: T, encodeDefaults: Boolean): WriteBatch = update(documentRef, strategy, data) {
-        this.encodeDefaults = encodeDefaults
-    }
+    public fun <T : Any> update(documentRef: DocumentReference, strategy: SerializationStrategy<T>, data: T, encodeDefaults: Boolean): WriteBatch =
+        update(documentRef, strategy, data) {
+            this.encodeDefaults = encodeDefaults
+        }
     public inline fun <T : Any> update(documentRef: DocumentReference, strategy: SerializationStrategy<T>, data: T, buildSettings: EncodeSettings.Builder.() -> Unit = {}): WriteBatch =
         updateEncoded(documentRef, encodeAsObject(strategy, data, buildSettings))
 
     @JvmName("updateField")
-    public inline fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<String, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit = {}): WriteBatch = updateEncodedFieldsAndValues(documentRef, encodeFieldAndValue(fieldsAndValues, buildSettings).orEmpty())
+    public fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<String, Any?>): WriteBatch =
+        update(documentRef, *fieldsAndValues) {}
+
+    @JvmName("updateField")
+    public fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<String, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit): WriteBatch =
+        updateFields(
+            documentRef,
+        ) {
+            apply(buildSettings)
+            fieldsAndValues.forEach { (field, value) ->
+                field to value
+            }
+        }
 
     @JvmName("updateFieldPath")
-    public inline fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<FieldPath, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit = {}): WriteBatch = updateEncodedFieldPathsAndValues(documentRef, encodeFieldAndValue(fieldsAndValues, buildSettings).orEmpty())
+    public fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<FieldPath, Any?>): WriteBatch =
+        update(documentRef, *fieldsAndValues) {}
+
+    @JvmName("updateFieldPath")
+    public fun update(documentRef: DocumentReference, vararg fieldsAndValues: Pair<FieldPath, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit): WriteBatch =
+        updateFields(
+            documentRef,
+        ) {
+            apply(buildSettings)
+            fieldsAndValues.forEach { (path, value) ->
+                path to value
+            }
+        }
+
+    /**
+     * Updates Fields/[FieldPath] of a [DocumentReference] using a [FieldsAndValuesUpdateDSL].
+     * @param documentRef the [DocumentReference] to update
+     * @param fieldsAndValuesUpdateDSL closure for configuring the [FieldsAndValuesUpdateDSL]
+     */
+    public fun updateFields(
+        documentRef: DocumentReference,
+        fieldsAndValuesUpdateDSL: FieldsAndValuesUpdateDSL.() -> Unit,
+    ): WriteBatch = WriteBatch(
+        nativeWrapper.updateEncoded(
+            documentRef,
+            FieldsAndValuesUpdateDSL().apply(fieldsAndValuesUpdateDSL).fieldsAndValues,
+        ),
+    )
 
     @PublishedApi
     internal fun updateEncoded(documentRef: DocumentReference, encodedData: EncodedObject): WriteBatch = WriteBatch(nativeWrapper.updateEncoded(documentRef, encodedData))
-
-    @PublishedApi
-    internal fun updateEncodedFieldsAndValues(documentRef: DocumentReference, encodedFieldsAndValues: List<Pair<String, Any?>>): WriteBatch = WriteBatch(nativeWrapper.updateEncodedFieldsAndValues(documentRef, encodedFieldsAndValues))
-
-    @PublishedApi
-    internal fun updateEncodedFieldPathsAndValues(documentRef: DocumentReference, encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>): WriteBatch = WriteBatch(nativeWrapper.updateEncodedFieldPathsAndValues(documentRef, encodedFieldsAndValues))
 
     public fun delete(documentRef: DocumentReference): WriteBatch = WriteBatch(nativeWrapper.delete(documentRef))
     public suspend fun commit() {
@@ -513,33 +642,39 @@ public data class DocumentReference internal constructor(internal val native: Na
     }
 
     @JvmName("updateFields")
-    public suspend inline fun update(vararg fieldsAndValues: Pair<String, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit = {}) {
-        updateEncodedFieldsAndValues(
-            encodeFieldAndValue(
-                fieldsAndValues,
-                buildSettings,
-            ).orEmpty(),
-        )
-    }
+    public suspend fun update(vararg fieldsAndValues: Pair<String, Any?>): Unit =
+        update(*fieldsAndValues) {}
 
-    @PublishedApi
-    internal suspend fun updateEncodedFieldsAndValues(encodedFieldsAndValues: List<Pair<String, Any?>>) {
-        native.updateEncodedFieldsAndValues(encodedFieldsAndValues)
-    }
+    @JvmName("updateFields")
+    public suspend fun update(vararg fieldsAndValues: Pair<String, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit): Unit =
+        updateFields {
+            apply(buildSettings)
+            fieldsAndValues.forEach { (field, value) ->
+                field to value
+            }
+        }
 
     @JvmName("updateFieldPaths")
-    public suspend inline fun update(vararg fieldsAndValues: Pair<FieldPath, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit = {}) {
-        updateEncodedFieldPathsAndValues(
-            encodeFieldAndValue(
-                fieldsAndValues,
-                buildSettings,
-            ).orEmpty(),
-        )
-    }
+    public suspend fun update(vararg fieldsAndValues: Pair<FieldPath, Any?>): Unit =
+        update(*fieldsAndValues) {}
 
-    @PublishedApi
-    internal suspend fun updateEncodedFieldPathsAndValues(encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>) {
-        native.updateEncodedFieldPathsAndValues(encodedFieldsAndValues)
+    @JvmName("updateFieldPaths")
+    public suspend fun update(vararg fieldsAndValues: Pair<FieldPath, Any?>, buildSettings: EncodeSettings.Builder.() -> Unit): Unit =
+        updateFields {
+            apply(buildSettings)
+            fieldsAndValues.forEach { (fieldPath, value) ->
+                fieldPath to value
+            }
+        }
+
+    /**
+     * Updates Fields/[FieldPath] using a [FieldsAndValuesUpdateDSL].
+     * @param fieldsAndValuesUpdateDSL closure for configuring the [FieldsAndValuesUpdateDSL]
+     */
+    public suspend fun updateFields(
+        fieldsAndValuesUpdateDSL: FieldsAndValuesUpdateDSL.() -> Unit,
+    ) {
+        native.updateEncoded(FieldsAndValuesUpdateDSL().apply(fieldsAndValuesUpdateDSL).fieldsAndValues)
     }
 
     public suspend fun delete() {

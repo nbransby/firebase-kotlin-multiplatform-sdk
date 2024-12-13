@@ -1,10 +1,10 @@
 package dev.gitlive.firebase.firestore.internal
 
-import dev.gitlive.firebase.firestore.EncodedFieldPath
 import dev.gitlive.firebase.firestore.NativeDocumentReferenceType
 import dev.gitlive.firebase.firestore.Source
 import dev.gitlive.firebase.firestore.await
 import dev.gitlive.firebase.firestore.awaitResult
+import dev.gitlive.firebase.firestore.toEncodedMap
 import dev.gitlive.firebase.firestore.toException
 import dev.gitlive.firebase.internal.EncodedObject
 import dev.gitlive.firebase.internal.ios
@@ -55,14 +55,9 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
         ios.updateData(encodedData.ios, it)
     }
 
-    actual suspend fun updateEncodedFieldsAndValues(encodedFieldsAndValues: List<Pair<String, Any?>>) =
+    actual suspend fun updateEncoded(encodedFieldsAndValues: List<FieldAndValue>) =
         await {
-            ios.updateData(encodedFieldsAndValues.toMap(), it)
-        }
-
-    actual suspend fun updateEncodedFieldPathsAndValues(encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>) =
-        await {
-            ios.updateData(encodedFieldsAndValues.toMap(), it)
+            ios.updateData(encodedFieldsAndValues.toEncodedMap(), it)
         }
 
     actual suspend fun delete() = await { ios.deleteDocumentWithCompletion(it) }

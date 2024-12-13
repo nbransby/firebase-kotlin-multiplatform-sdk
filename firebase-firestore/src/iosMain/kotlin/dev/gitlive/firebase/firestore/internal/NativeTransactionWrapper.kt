@@ -2,8 +2,8 @@ package dev.gitlive.firebase.firestore.internal
 
 import cocoapods.FirebaseFirestoreInternal.FIRTransaction
 import dev.gitlive.firebase.firestore.DocumentReference
-import dev.gitlive.firebase.firestore.EncodedFieldPath
 import dev.gitlive.firebase.firestore.ios
+import dev.gitlive.firebase.firestore.toEncodedMap
 import dev.gitlive.firebase.internal.EncodedObject
 import dev.gitlive.firebase.internal.ios
 
@@ -22,19 +22,11 @@ internal actual class NativeTransactionWrapper actual constructor(actual val nat
 
     actual fun updateEncoded(documentRef: DocumentReference, encodedData: EncodedObject): NativeTransactionWrapper = native.updateData(encodedData.ios, documentRef.ios).let { this }
 
-    actual fun updateEncodedFieldsAndValues(
+    actual fun updateEncoded(
         documentRef: DocumentReference,
-        encodedFieldsAndValues: List<Pair<String, Any?>>,
+        encodedFieldsAndValues: List<FieldAndValue>,
     ): NativeTransactionWrapper = native.updateData(
-        encodedFieldsAndValues.toMap(),
-        documentRef.ios,
-    ).let { this }
-
-    actual fun updateEncodedFieldPathsAndValues(
-        documentRef: DocumentReference,
-        encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>,
-    ): NativeTransactionWrapper = native.updateData(
-        encodedFieldsAndValues.toMap(),
+        encodedFieldsAndValues.toEncodedMap(),
         documentRef.ios,
     ).let { this }
 

@@ -9,7 +9,7 @@ import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 
-public actual fun FirebaseDecoder.structureDecoder(descriptor: SerialDescriptor, polymorphicIsNested: Boolean): CompositeDecoder = when (descriptor.kind) {
+internal actual fun FirebaseDecoderImpl.structureDecoder(descriptor: SerialDescriptor, polymorphicIsNested: Boolean): CompositeDecoder = when (descriptor.kind) {
     StructureKind.CLASS, StructureKind.OBJECT -> decodeAsMap(false)
     StructureKind.LIST -> decodeAsList()
     StructureKind.MAP -> (value as? Map<*, *>).orEmpty().entries.toList().let {
@@ -19,13 +19,13 @@ public actual fun FirebaseDecoder.structureDecoder(descriptor: SerialDescriptor,
     else -> TODO("The firebase-kotlin-sdk does not support $descriptor for serialization yet")
 }
 
-public actual fun getPolymorphicType(value: Any?, discriminator: String): String =
+internal actual fun getPolymorphicType(value: Any?, discriminator: String): String =
     (value as? Map<*, *>).orEmpty()[discriminator] as String
 
-private fun FirebaseDecoder.decodeAsList(): CompositeDecoder = (value as? List<*>).orEmpty().let {
+private fun FirebaseDecoderImpl.decodeAsList(): CompositeDecoder = (value as? List<*>).orEmpty().let {
     FirebaseCompositeDecoder(it.size, settings) { _, index -> it[index] }
 }
-private fun FirebaseDecoder.decodeAsMap(isNestedPolymorphic: Boolean): CompositeDecoder = (value as? Map<*, *>).orEmpty().let { map ->
+private fun FirebaseDecoderImpl.decodeAsMap(isNestedPolymorphic: Boolean): CompositeDecoder = (value as? Map<*, *>).orEmpty().let { map ->
     FirebaseClassDecoder(map.size, settings, { map.containsKey(it) }) { desc, index ->
         if (isNestedPolymorphic) {
             if (desc.getElementName(index) == "value") {
