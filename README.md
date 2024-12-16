@@ -30,19 +30,126 @@ The following libraries are available for the various Firebase products.
 
 Is the Firebase library or API you need missing? [Create an issue](https://github.com/GitLiveApp/firebase-kotlin-sdk/issues/new?labels=API+coverage&template=increase-api-coverage.md&title=Add+%5Bclass+name%5D.%5Bfunction+name%5D+to+%5Blibrary+name%5D+for+%5Bplatform+names%5D) to request additional API coverage or be awesome and [submit a PR](https://github.com/GitLiveApp/firebase-kotlin-sdk/fork)
 
+## Installation
+1. First of all, Add `plugin.serialization` plugin in gradle:
+   * First go to `build.gradle.kts` in the main root folder and add it:
+  
+   ```groovy
+   kotlin("plugin.serialization").version("1.9.20").apply(false) // use the latest version of kotlin
+   ```
+   
+   * Then go to `build.gradle.kts` in the shared module:
+  
+   ```groovy
+   kotlin("plugin.serialization")
+   ```
+2. Choose the Firebase products you are going to use, in this example, we will use only `firestore` but you can use more
+   Start By adding the dependency `dev.gitlive:firebase-firestore` in the `commonMain` in the `sourceSets` block which exists usually in `kotlin` and you will find it in `build.gradle.kts` in the shared module:
+     ```groovy
+      val commonMain by getting {
+                  dependencies {
+                      // ...
+                      implementation("dev.gitlive:firebase-firestore:1.10.0")
+                  }
+              }
+     ```
+4. Create a Firebase project or use the one that you already have    
+5. Add the Android and iOS apps and follow all the instructions
+6. Add the following to your `.gitignore` (optional):
+
+   ```gitignore
+   
+    # Google && Firebase for iOS and Android
+    **/google-services.json
+    **/GoogleService-Info.plist
+    **/firebase_app_id_file.json
+  
+   ```
+
+7. Setup Android and iOS apps in the Kotlin multiplatform project:
+   ### Android:
+     Like usual in Android projects
+     
+   * First, apply the `com.google.gms.google-services` gradle plugin in the `androidApp` or the Android module
+     
+   Example of how it will look like:
+  
+   ```groovy
+    plugins {
+        kotlin("multiplatform")
+        id("com.android.application")
+        id("com.google.gms.google-services") version "4.4.0" // use latest version
+    }
+   ```
+   * Add the Firebase bom Android dependency:
+
+   
+    ```groovy
+    val androidMain by getting {
+                dependencies {
+                    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:32.5.0"))
+                }
+            }
+    ```
+    
+    You don't have to add all the libraries you are going to use, like Firebase Firestore `com.google.firebase:firebase-firestore-ktx`
+     because it's already there when you add the Firebase Firestore KMP SDK in the `commonMain`, but you can if you planning on using the code in the `androidMain` or `androidApp`
+
+    ### iOS
+    * You need to add the official [iOS Firebase SDK](https://firebase.google.com/docs/ios/setup) first, there a different ways to get it, check this [installation guide](https://firebase.google.com/docs/ios/installation-methods) but the easiest way is using swift package manager, you can also using `Cocoapods`
+    * in `iOSApp.swift` or your main app file
+      Import the Firebase Core 
+      ```swift
+      import SwiftUI
+      import FirebaseCore
+      ```
+     * Create `AppDelegate` that initializes the Firebase iOS SDK using
+       ```swift
+       FirebaseApp.configure()
+       ```
+       and add it to your app
+
+       example of what it will look like:
+
+       ```swift
+        import SwiftUI
+        import FirebaseCore
+        
+        class AppDelegate: NSObject, UIApplicationDelegate {
+          func application(_ application: UIApplication,
+                           didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+            FirebaseApp.configure()
+        
+            return true
+          }
+        }
+        
+        @main
+        struct iOSApp: App {
+            @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+        	var body: some Scene {
+        		WindowGroup {    
+        			ContentView()
+        		}
+        	}
+        }
+
+       ```
+
+
 ## Kotlin-first design
 
-Unlike the Kotlin Extensions for the Firebase Android SDK this project does not extend a Java based SDK so we get the full power of Kotlin including coroutines and serialization!
+Unlike the Kotlin Extensions for the Firebase Android SDK, this project does not extend a Java-based SDK so we get the full power of Kotlin including coroutines and serialization!
 
 <h3><a href="https://kotlinlang.org/docs/tutorials/coroutines/async-programming.html#coroutines">Suspending functions</a></h3>
 
-Asynchronous operations that return a single or no value are represented by suspending functions in the SDK instead of callbacks, listeners or OS specific types such as [Task](https://developer.android.com/reference/com/google/android/play/core/tasks/Task), for example:
+Asynchronous operations that return a single or no value are represented by suspending functions in the SDK instead of callbacks, listeners, or OS-specific types such as [Task](https://developer.android.com/reference/com/google/android/play/core/tasks/Task), for example:
 
 ```kotlin
 suspend fun signInWithCustomToken(token: String): AuthResult
 ```
 
-It is important to remember that unlike a callback based API, wating for suspending functions to complete is implicit and so if you don't want to wait for the result you can `launch` a new coroutine:
+It is important to remember that, unlike a callback-based API, waiting for suspending functions to complete is implicit so if you don't want to wait for the result you can `launch` a new coroutine:
 
 ```kotlin
 //TODO don't use GlobalScope
@@ -59,7 +166,7 @@ Asynchronous streams of values are represented by Flows in the SDK instead of re
 val snapshots: Flow<DocumentSnapshot>
 ```
 
-The flows are cold, which means a new listener is added every time a terminal operator is applied to the resulting flow. A buffer with the [default size](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/-b-u-f-f-e-r-e-d.html) is used to buffer values received from the listener, use the [`buffer` operator](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/buffer.html) on the flow to specify a user-defined value and to control what happens when data is produced faster than consumed, i.e. to control the back-pressure behavior. Often you are only interested in the latest value received, in this case you can use the [`conflate` operator](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/conflate.html) to disable buffering.
+The flows are cold, which means a new listener is added every time a terminal operator is applied to the resulting flow. A buffer with the [default size](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/-b-u-f-f-e-r-e-d.html) is used to buffer values received from the listener, use the [`buffer` operator](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/buffer.html) on the flow to specify a user-defined value and to control what happens when data is produced faster than consumed, i.e. to control the back-pressure behavior. Often you are only interested in the latest value received, in this case, you can use the [`conflate` operator](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/conflate.html) to disable buffering.
 
 The listener is removed once the flow [completes](https://kotlinlang.org/docs/reference/coroutines/flow.html#flow-completion) or is [cancelled](https://kotlinlang.org/docs/reference/coroutines/flow.html#flow-cancellation).
 
@@ -71,7 +178,7 @@ The Firebase Kotlin SDK uses Kotlin serialization to read and write custom class
 
 ```groovy
 plugins {
-    kotlin("multiplatform") version "1.9.20" // or kotlin("jvm") or any other kotlin plugin
+    kotlin("multiplatform") version "2.0.20" // or kotlin("jvm") or any other kotlin plugin
     kotlin("plugin.serialization") version "1.9.20"
 }
 ```
@@ -91,7 +198,7 @@ db.collection("cities").document("LA").set(City.serializer(), city) { encodeDefa
 
 The `buildSettings` closure is optional and allows for configuring serialization behaviour. 
 
-Setting the `encodeDefaults` parameter is optional and defaults to `true`, set this to false to omit writing optional properties if they are equal to theirs default values.
+Setting the `encodeDefaults` parameter is optional and defaults to `true`, set this to false to omit writing optional properties if they are equal to their default values.
 Using [@EncodeDefault](https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-encode-default/) on properties is a recommended way to locally override the behavior set with `encodeDefaults`.
 
 You can also omit the serializer if it can be inferred using `serializer<KType>()`. 
@@ -160,7 +267,7 @@ val document = PointOfInterest(
 
 <h4>Polymorphic serialization (sealed classes)</h4>
 
-This sdk will handle polymorphic serialization automatically if you have a sealed class and its children marked as `Serializable`. It will include a `type` property that will be used to discriminate which child class is the serialized.
+This SDK will handle polymorphic serialization automatically if you have a sealed class and its children are marked as `Serializable`. It will include a `type` property that will be used to discriminate which child class is serialized.
 
 You can change this `type` property by using the `@FirebaseClassDiscrminator` annotation in the parent sealed class:
 
@@ -253,15 +360,15 @@ In cases where it makes sense, such as Firebase Functions HTTPS Callable, operat
 
 ## Multiplatform
 
-The Firebase Kotlin SDK provides a common API to access Firebase for projects targeting *iOS*, *Android*, *JVM* and *JS* meaning you can use Firebase directly in your common code. Under the hood, the SDK achieves this by binding to the respective official Firebase SDK for each supported platform.
+The Firebase Kotlin SDK provides a common API to access Firebase for projects targeting *iOS*, *Android*, and *JS* meaning you can use Firebase directly in your common code. Under the hood, the SDK achieves this by binding to the respective official Firebase SDK for each supported platform.
 
 It uses the <a href="https://github.com/GitLiveApp/firebase-java-sdk">Firebase Java SDK</a> to support the JVM target. The library requires [additional initialization](https://github.com/GitLiveApp/firebase-java-sdk?tab=readme-ov-file#initializing-the-sdk) compared to the official Firebase SDKs.
 
 ### Accessing the underlying Firebase SDK
 
-In some cases you might want to access the underlying official Firebase SDK in platform specific code, for example when the common API is missing the functionality you need. For this purpose each class in the SDK has `android`, `ios` and `js` extension properties that hold the equivalent object of the underlying official Firebase SDK. For *JVM*, as the `firebase-java-sdk` is a direct port of the Firebase Android SDK, is it also accessed via the `android` property.
+In some cases, you might want to access the underlying official Firebase SDK in platform-specific code, for example when the common API is missing the functionality you need. For this purpose, each class in the SDK has `android`, `ios`, and `js` properties which hold the  equivalent object of the underlying official Firebase SDK. 
 
-These properties are only accessible from the equivalent target's source set. For example to disable persistence in Cloud Firestore on Android you can write the following in your Android specific code (e.g. `androidMain` or `androidTest`):
+These properties are only accessible from the equivalent target's source set. For example, to disable persistence in Cloud Firestore on Android you can write the following in your Android-specific code (e.g. `androidMain` or `androidTest`):
 
 ```kotlin
   Firebase.firestore.android.firestoreSettings = FirebaseFirestoreSettings.Builder(Firebase.firestore.android.firestoreSettings)
@@ -288,9 +395,9 @@ cocoapods {
 If you'd like to contribute to this project then you can fork this repository. 
 You can build and test the project locally.
 1. Open the project in IntelliJ IDEA.
-2. Install cocoapods via `sudo gem install -n /usr/local/bin cocoapods`
+2. Install Cocoapods via `sudo gem install -n /usr/local/bin cocoapods`
 3. Install the GitLive plugin into IntelliJ
-4. After a gradle sync then run `publishToMavenLocal`
+4. After a gradle sync run `publishToMavenLocal`
 
 ### Testing
 To run the tests you can use the following gradle tasks:
