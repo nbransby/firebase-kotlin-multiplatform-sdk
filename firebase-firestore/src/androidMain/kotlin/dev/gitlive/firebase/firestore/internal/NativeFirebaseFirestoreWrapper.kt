@@ -8,7 +8,7 @@ import dev.gitlive.firebase.firestore.android
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
-internal actual class NativeFirebaseFirestoreWrapper actual constructor(actual val native: NativeFirebaseFirestore) {
+internal actual class NativeFirebaseFirestoreWrapper actual constructor(actual val native: NativeFirebaseFirestore, actual val databaseId: String?) {
 
     actual fun collection(collectionPath: String) = native.collection(collectionPath)
 

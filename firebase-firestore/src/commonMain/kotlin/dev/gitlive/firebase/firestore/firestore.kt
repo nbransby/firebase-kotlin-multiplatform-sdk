@@ -32,7 +32,7 @@ import kotlin.jvm.JvmName
 public expect val Firebase.firestore: FirebaseFirestore
 
 /** Returns the [FirebaseFirestore] instance of a given [FirebaseApp]. */
-public expect fun Firebase.firestore(app: FirebaseApp): FirebaseFirestore
+public expect fun Firebase.firestore(app: FirebaseApp, databaseId: String? = null): FirebaseFirestore
 
 internal expect class NativeFirebaseFirestore
 

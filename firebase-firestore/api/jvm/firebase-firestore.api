@@ -730,7 +730,8 @@ public final class dev/gitlive/firebase/firestore/_encodersKt {
 }
 
 public final class dev/gitlive/firebase/firestore/android {
-	public static final fun firestore (Ldev/gitlive/firebase/Firebase;Ldev/gitlive/firebase/FirebaseApp;)Ldev/gitlive/firebase/firestore/FirebaseFirestore;
+	public static final fun firestore (Ldev/gitlive/firebase/Firebase;Ldev/gitlive/firebase/FirebaseApp;Ljava/lang/String;)Ldev/gitlive/firebase/firestore/FirebaseFirestore;
+	public static synthetic fun firestore$default (Ldev/gitlive/firebase/Firebase;Ldev/gitlive/firebase/FirebaseApp;Ljava/lang/String;ILjava/lang/Object;)Ldev/gitlive/firebase/firestore/FirebaseFirestore;
 	public static final fun firestoreSettings (Ldev/gitlive/firebase/firestore/FirebaseFirestoreSettings;Lkotlin/jvm/functions/Function1;)Ldev/gitlive/firebase/firestore/FirebaseFirestoreSettings;
 	public static synthetic fun firestoreSettings$default (Ldev/gitlive/firebase/firestore/FirebaseFirestoreSettings;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ldev/gitlive/firebase/firestore/FirebaseFirestoreSettings;
 	public static final fun getAndroid (Ldev/gitlive/firebase/firestore/CollectionReference;)Lcom/google/firebase/firestore/CollectionReference;

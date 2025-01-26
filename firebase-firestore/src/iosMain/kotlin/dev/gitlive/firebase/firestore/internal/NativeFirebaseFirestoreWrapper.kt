@@ -9,7 +9,7 @@ import dev.gitlive.firebase.firestore.awaitResult
 import kotlinx.coroutines.runBlocking
 
 @Suppress("UNCHECKED_CAST")
-internal actual class NativeFirebaseFirestoreWrapper internal actual constructor(actual val native: NativeFirebaseFirestore) {
+internal actual class NativeFirebaseFirestoreWrapper internal actual constructor(actual val native: NativeFirebaseFirestore, actual val databaseId: String?) {
 
     actual fun collection(collectionPath: String) = native.collectionWithPath(collectionPath)
 

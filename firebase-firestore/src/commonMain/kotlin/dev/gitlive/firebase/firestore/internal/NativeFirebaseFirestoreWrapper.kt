@@ -7,8 +7,9 @@ import dev.gitlive.firebase.firestore.NativeQuery
 import dev.gitlive.firebase.firestore.NativeTransaction
 import dev.gitlive.firebase.firestore.NativeWriteBatch
 
-internal expect class NativeFirebaseFirestoreWrapper internal constructor(native: NativeFirebaseFirestore) {
+internal expect class NativeFirebaseFirestoreWrapper internal constructor(native: NativeFirebaseFirestore, databaseId: String? = null) {
     val native: NativeFirebaseFirestore
+    val databaseId: String?
 
     fun collection(collectionPath: String): NativeCollectionReference
     fun collectionGroup(collectionId: String): NativeQuery

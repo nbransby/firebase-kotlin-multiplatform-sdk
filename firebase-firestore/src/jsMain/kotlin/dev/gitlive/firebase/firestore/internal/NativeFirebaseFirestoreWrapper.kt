@@ -23,27 +23,30 @@ import kotlinx.coroutines.promise
 
 internal actual class NativeFirebaseFirestoreWrapper internal constructor(
     private val createNative: NativeFirebaseFirestoreWrapper.(FirebaseFirestoreSettings?) -> NativeFirebaseFirestore,
+    actual val databaseId: String?,
 ) {
 
-    internal actual constructor(native: NativeFirebaseFirestore) : this(
+    internal actual constructor(native: NativeFirebaseFirestore, databaseId: String?) : this(
         { settings ->
             settings?.let {
-                NativeFirebaseFirestore(initializeFirestore(native.js.app, settings))
+                NativeFirebaseFirestore(initializeFirestore(native.js.app, settings, databaseId))
             } ?: native
         },
+        databaseId,
     )
-    internal constructor(app: FirebaseApp) : this(
+    internal constructor(app: FirebaseApp, databaseId: String?) : this(
         { settings ->
             NativeFirebaseFirestore(
                 settings?.let {
-                    initializeFirestore(app, it.js).also {
+                    initializeFirestore(app, it.js, databaseId).also {
                         emulatorSettings?.run {
                             connectFirestoreEmulator(it, host, port)
                         }
                     }
-                } ?: getFirestore(app),
+                } ?: getFirestore(app, databaseId),
             )
         },
+        databaseId,
     )
 
     private data class EmulatorSettings(val host: String, val port: Int)

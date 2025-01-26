@@ -25,8 +25,8 @@ public val FirebaseFirestore.ios: FIRFirestore get() = FIRFirestore.firestore()
 public actual val Firebase.firestore: FirebaseFirestore get() =
     FirebaseFirestore(FIRFirestore.firestore())
 
-public actual fun Firebase.firestore(app: FirebaseApp): FirebaseFirestore = FirebaseFirestore(
-    FIRFirestore.firestoreForApp(app.ios as objcnames.classes.FIRApp),
+public actual fun Firebase.firestore(app: FirebaseApp, databaseId: String?): FirebaseFirestore = FirebaseFirestore(
+    databaseId?.let { FIRFirestore.firestoreForApp(app.ios as objcnames.classes.FIRApp, it) } ?: FIRFirestore.firestoreForApp(app.ios as objcnames.classes.FIRApp),
 )
 
 public val LocalCacheSettings.ios: FIRLocalCacheSettingsProtocol get() = when (this) {

@@ -33,10 +33,10 @@ import dev.gitlive.firebase.firestore.externals.WriteBatch as JsWriteBatch
 import dev.gitlive.firebase.firestore.externals.documentId as jsDocumentId
 
 public actual val Firebase.firestore: FirebaseFirestore get() =
-    rethrow { FirebaseFirestore(NativeFirebaseFirestoreWrapper(getApp())) }
+    rethrow { FirebaseFirestore(NativeFirebaseFirestoreWrapper(getApp(), null)) }
 
-public actual fun Firebase.firestore(app: FirebaseApp): FirebaseFirestore =
-    rethrow { FirebaseFirestore(NativeFirebaseFirestoreWrapper(app.js)) }
+public actual fun Firebase.firestore(app: FirebaseApp, databaseId: String?): FirebaseFirestore =
+    rethrow { FirebaseFirestore(NativeFirebaseFirestoreWrapper(app.js, databaseId)) }
 
 internal actual data class NativeFirebaseFirestore(val js: JsFirestore)
 

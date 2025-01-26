@@ -81,7 +81,7 @@ public external fun getDocsFromCache(query: Query): Promise<QuerySnapshot>
 
 public external fun getDocsFromServer(query: Query): Promise<QuerySnapshot>
 
-public external fun getFirestore(app: FirebaseApp? = definedExternally): Firestore
+public external fun getFirestore(app: FirebaseApp? = definedExternally, databaseId: String? = definedExternally): Firestore
 
 public external fun increment(n: Int): FieldValue
 
