@@ -85,7 +85,7 @@ public actual class StorageReference(internal val android: com.google.firebase.s
         if (metadata != null) {
             android.putFile(file.uri, metadata.toStorageMetadata()).await().run {}
         } else {
-            android.putFile(file.uri).await().run {}
+            android.putFile(file.uri, FirebaseStorageMetadata().toStorageMetadata()).await().run {}
         }
     }
 
@@ -93,7 +93,7 @@ public actual class StorageReference(internal val android: com.google.firebase.s
         if (metadata != null) {
             android.putBytes(data.data, metadata.toStorageMetadata()).await().run {}
         } else {
-            android.putBytes(data.data).await().run {}
+            android.putBytes(data.data, FirebaseStorageMetadata().toStorageMetadata()).await().run {}
         }
     }
 
@@ -101,7 +101,7 @@ public actual class StorageReference(internal val android: com.google.firebase.s
         val android = if (metadata != null) {
             android.putFile(file.uri, metadata.toStorageMetadata())
         } else {
-            android.putFile(file.uri)
+            android.putFile(file.uri, FirebaseStorageMetadata().toStorageMetadata())
         }
 
         val flow = callbackFlow {

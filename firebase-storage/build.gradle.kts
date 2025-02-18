@@ -125,7 +125,7 @@ kotlin {
         getByName("commonMain") {
             dependencies {
                 api(project(":firebase-app"))
-                implementation(project(":firebase-common"))
+                api(project(":firebase-common"))
             }
         }
 
@@ -139,6 +139,10 @@ kotlin {
             dependencies {
                 api(libs.google.firebase.storage)
             }
+        }
+
+        getByName("jvmMain") {
+            kotlin.srcDir("src/androidMain/kotlin")
         }
     }
 }
